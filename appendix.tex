@@ -19,10 +19,10 @@ There are also many variants of edit distance, by introducing additional primiti
 Using Levenshtein's original set of operations, the edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $ed(n,m)$, defined by the recurrence.
 
 \begin{equation}
-  ed(i,0) = i  & \quad \text{for } 1 \leq i \leq n
+  ed(i,0) = i \quad \text{for } 1 \leq i \leq n
 \end{equation}
 \begin{equation}
-  ed(0,j) = j  & \quad \text{for } 1 \leq j \leq m
+  ed(0,j) = j \quad \text{for } 1 \leq j \leq m
 \end{equation}
 \begin{equation}
   ed(i,j) =
@@ -60,7 +60,7 @@ Using Levenshtein's original set of operations, the edit distance between $a = a
 
 \section{Description of the Russian Troll Dataset}
 
-\begin{table}[H]
+\begin{table*}[htbp]
 \centering
 \caption{The description of every attribute of Russian Troll dataset.}
 \label{tab:trollsattribute}
@@ -112,4 +112,4 @@ Using Levenshtein's original set of operations, the edit distance between $a = a
   tco3\_step1 & First redirect for the third http(s)://t.co/ link in a tweet, if it exists & discarded \\
   \hline
 \end{tabular}
-\end{table}
+\end{table*}

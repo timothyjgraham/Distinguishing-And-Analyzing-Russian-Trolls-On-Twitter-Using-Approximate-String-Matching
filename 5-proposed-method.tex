@@ -80,10 +80,10 @@ Formally, given two strings $s_1$ and $s_2$ on an alphabet $\Sigma$ and a semant
 The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $sed(n,m)$, defined by the recurrence.
 
 \begin{equation}
-  sed(i,0) = \sum\limits_{k=1}^i w_{del} (a_k)  & \quad \text{for } 1 \leq i \leq n
+  sed(i,0) = \sum\limits_{k=1}^i w_{del} (a_k) \quad \text{for } 1 \leq i \leq n
 \end{equation}
 \begin{equation}
-  sed(0,j) = \sum\limits_{k=1}^j w_{ins} (b_k)  & \quad \text{for } 1 \leq j \leq m
+  sed(0,j) = \sum\limits_{k=1}^j w_{ins} (b_k) \quad \text{for } 1 \leq j \leq m
 \end{equation}
 \begin{equation}
   sed(i,j) =
@@ -134,14 +134,14 @@ As we have discussed in section~\ref{sec:sed}, the semantic edit distance requir
 
 Given $n$ symbols, $s_1,s_2,...,s_n$, the co-occurrence matrix of them is shown as follows,
 
-\[
+\begin{equation*}
 \begin{bmatrix}
     x_{11} & x_{12} & \dots  & x_{1n} \\
     x_{21} & x_{22} & \dots  & x_{2n} \\
     \vdots & \vdots & \ddots & \vdots \\
     x_{n1} & x_{n2} & \dots  & x_{nn}
 \end{bmatrix}
-\]
+\end{equation*}
 
 where $x_{ij}$ denotes the co-occurrence number of $s_i$ and $s_j$. (for all $1 \leq i \leq n$, $1 \leq j \leq n$). The co-occurrence matrix is symmetrical, i.e. $x_{ij} = x_{ji}$, where $i \neq j$. Besides, $x_{kk} = 0$, for all $1 \leq k \leq n$. 
 
@@ -241,7 +241,7 @@ The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given 
 According to the dynamic programming, we construct a matrix with two dimensions equaling to the lengths of a given pair of strings. In other words, we construct a matrix to record the edit distances between all symbols of the first string and all symbols of the second string, then we can compute the values by `flood filling' the matrix, from top to bottom and left to right, and the semantic edit distance between the two strings is the last value computed, which is the right bottom element.
 % \todo[inline]{DK: It would be good to have a pseudo code of the dynamic programming (including loop, input, output). Although it would be somewhat similar to what you described above, it will give readers an idea on what is the input, output, and intermediate variables. You may move this section after 4.5 to include the pseudo code for semantic similarity as well (i.e. 4.6 Implementation and Complexity). Refer to https://www.overleaf.com/learn/latex/algorithms}
 
-\begin{algorithm}[H]
+\begin{algorithm}[thbp]
 \SetAlgoLined
 % \KwResult{Write here the result }
 \SetKwInOut{Input}{input}
@@ -249,17 +249,17 @@ According to the dynamic programming, we construct a matrix with two dimensions 
  $n = len(a)$\;
  $m = len(b)$\;
  $sed[i,j] = 0$\;
- \For{$i\gets0$ \KwTo $n$}{
+ \For{$i \gets 0$ \KwTo $n$}{
     $sed[i,0] = sed[i-1,0]+(1-sim(a_i,a_{i-1}))$\;
  }
- \For{$j\gets0$ \KwTo $m$}{
+ \For{$j \gets 0$ \KwTo $m$}{
     $sed[0,j] = sed[0,j-1]+(1-sim(b_j,b_{j-1}))$\;
  }
- \For{$i\gets1$ \KwTo $n$}{
+ \For{$ i \gets 1 $ \KwTo $n$}{
   \For{$j\gets1$ \KwTo $m$}{
-    \eIf{$a_i == b_j$}{
+    \If{$a_i == b_j$}{
      $sed[i,j] = sed[i-1,j-1]$\;
-     }{
+     } \Else {
      $sed[i,j] = min(sed[i-1,j]+(1-sim(a_i,a_{i-1})), sed[i,j-1]+(1-sim(b_j,b_{j-1})), sed[i-1,j-1]+(1-sim(a_i,b_j)))$\;
     }
   }
