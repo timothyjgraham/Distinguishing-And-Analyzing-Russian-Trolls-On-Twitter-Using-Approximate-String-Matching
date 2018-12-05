@@ -1,0 +1,115 @@
+%!TEX root = main.tex
+%
+\newpage
+\appendix
+%
+\etocdepthtag.toc{mtappendix}
+\etocsettagdepth{mtchapter}{none}
+\etocsettagdepth{mtappendix}{subsection}
+\etoctocstyle{1}{Contents (Appendix)}
+\tableofcontents
+
+\section{Formal Definition of Edit Distance}
+\label{si-sec:edit-dist-formal}
+
+Given two strings $s_1$ and $s_2$ on an alphabet $\Sigma$, (alphabet is a set that contains all of the symbols which would occur, e.g. the set of ASCII characters.), the edit distance $ed(s_1,s_2)$ is the minimum number of required edit operations to transform $s_1$ into $s_2$. One of the simplest (also most commonly used) sets of edit operations is proposed by Levenshtein in 1966. The edit operations allowed including: (i) insert a single symbol into a string; (ii) delete a single symbol from a string and (iii) replace a single symbol of a string by another single symbol. In Levenshtein edit distance, each of these three operations has unit cost. 
+
+There are also many variants of edit distance, by introducing additional primitive operations or restricting the set of operations. For example, the transposition of two adjacent characters is another common operation, as it is a common mistake while typing text. Similarly, longest common subsequence (LCS) distance is a variant of edit distance with only insertion and removal operations. 
+
+Using Levenshtein's original set of operations, the edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $ed(n,m)$, defined by the recurrence.
+
+\begin{equation}
+  ed(i,0) = i  & \quad \text{for } 1 \leq i \leq n
+\end{equation}
+\begin{equation}
+  ed(0,j) = j  & \quad \text{for } 1 \leq j \leq m
+\end{equation}
+\begin{equation}
+  ed(i,j) =
+  \begin{cases}
+    ed(i-1,j-1) & \quad \text{if } a_i = b_j\\
+    min 
+    \begin{cases}
+        ed(i-1,j) + 1\\
+        ed(i,j-1) + 1\\
+        ed(i-1,j-1) + 1
+    \end{cases}
+    & \quad \text{if } a_i \neq b_j
+  \end{cases}
+\end{equation}
+
+\textbf{Implementation of edit distance.} The use of a recursive algorithm is a naive implementation of edit distance. It basically checks all the possibilities and finds the minimum number of operations. Recursion divides the big problem into similar small problems and solves the smaller problems recursively. The naive recursive algorithm is implemented as follows:
+
+\begin{itemize}
+  \item If the last character of two strings are same, ignore the last character of two strings and get the edit distance for the remaining strings. i.e. 
+      \[\text{if } a_n=b_m, \quad ed(n,m) = ed(n-1,m-1). \]
+
+  \item If the last character of two strings are not the same, we recursively compute the minimum cost for all operations on the last character of the first string as follows, and take the minimum of three values. 
+  \begin{itemize}
+    \item Insert: Recur for $n$ and $m-1$, i.e. $ed(n,m-1) + 1$
+    \item Delete: Recur for $n-1$ and $m$, i.e. $ed(n-1,m) + 1$
+    \item Substitute: Recur for $n-1$ and $m-1$, i.e. $ed(n-1,m-1) + 1$
+  \end{itemize}
+  
+  \item Thus, $ ed(n,m) = min(ed(n,m-1) + 1, ed(n-1,m) + 1, ed(n-1,m-1) + 1) $
+\end{itemize}
+
+\textbf{Dynamic programming.} The most common implementation of edit distance is using dynamic programming. Dynamic programming looks similar to the recursion, but the reasoning logic is the reverse. According to the dynamic programming, we maintain a matrix whose two dimensions equal the lengths of a given pair of strings. In other words, we construct a matrix to record the edit distances between all symbols of the first string and all symbols of the second string, then we can compute the values by `flood filling' the matrix, from top to bottom and left to right, and the distance between the two strings is the last value computed, which is the right bottom element.
+
+\textbf{Complexity.}The recursive implementation is very inefficient because it recomputes the edit distance of the same substrings over and over again. The time complexity of recursive algorithm is exponential. The worst case happens when two strings are completely different, i.e. zero characters of two strings match, and we need to perform the operation on every character of the string, and therefore it may end up doing $ O(3^{max(m,n)}) $ operations. The time complexity of the dynamic programming approach is $ O(mn) $. The space complexity is also $ O(mn) $, if the whole dynamic programming matrix is constructed. 
+
+\section{Description of the Russian Troll Dataset}
+
+\begin{table}[H]
+\centering
+\caption{The description of every attribute of Russian Troll dataset.}
+\label{tab:trollsattribute}
+\small
+\begin{tabular}{|l|m{9cm}|l|}
+  \hline
+  Attribute & Description & Usage \\
+  \hline\hline
+  external\_author\_id & An author account ID from Twitter & discarded \\
+  \hline
+  author & The handle who send the tweet & discarded \\
+  \hline
+  content & The text of the tweet & retained \\
+  \hline
+  region & The region classification determined by Social Studio & discarded \\
+  \hline
+  language & The language of the tweet & retained \\
+  \hline
+  publish\_date & The date and time the tweet was sent & retained \\
+  \hline
+  harvested\_date & The date and time the tweet was collected by Social Studio & discarded \\
+  \hline
+  following & The number of accounts the handle was following at the time of the tweet & discarded \\
+  \hline
+  followers & The number of followers the handle had at the time of the tweet & discarded \\
+  \hline
+  updates & The number of update actions on the account that authored the tweet, including tweets, retweets and likes & discarded \\
+  \hline
+  post\_type & Indicates if the tweet was a retweet or a quote-tweet & discarded \\
+  \hline
+  account\_type & Specific account theme labeled by Linvill and Warren & discarded \\
+  \hline
+  retweet & A binary indicator of whether or not the tweet is a retweet & discarded \\
+  \hline
+  account\_category & General account theme labeled by Linvill and Warren & retained \\
+  \hline
+  new\_june\_2018 & Indicates whether the handle was newly listed in June 2018 & discarded \\
+  \hline
+  alt\_external\_id & Reconstruction of author account ID from Twitter, derived from ``article\_url'' variable & discarded \\
+  \hline
+  tweet\_id & Unique id assigned by Twitter to each status update, derived from ``article\_url'' & discarded \\
+  \hline
+  article\_url & Link to original tweet. Now redirects to ``Account Suspended'' page & discarded \\
+  \hline
+  tco1\_step1 & First redirect for the first http(s)://t.co/ link in a tweet, if it exists & discarded \\
+  \hline
+  tco2\_step1 & First redirect for the second http(s)://t.co/ link in a tweet, if it exists & discarded \\
+  \hline
+  tco3\_step1 & First redirect for the third http(s)://t.co/ link in a tweet, if it exists & discarded \\
+  \hline
+\end{tabular}
+\end{table}

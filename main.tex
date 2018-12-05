@@ -1,0 +1,215 @@
+\def\year{2018}\relax
+%File: formatting-instruction.tex
+\documentclass[letterpaper]{article} %DO NOT CHANGE THIS
+\usepackage{aaai18}  %Required
+\usepackage{times}  %Required
+\usepackage{helvet}  %Required
+\usepackage{courier}  %Required
+\usepackage{url}  %Required
+\usepackage{graphicx}  %Required
+\frenchspacing  %Required
+\setlength{\pdfpagewidth}{8.5in}  %Required
+\setlength{\pdfpageheight}{11in}  %Required
+%PDF Info Is Required:
+ \pdfinfo{
+	/Title (Distinguishing Russian Trolls On Twitter Using Approximate String Matching and Actor-Network Theory)
+	/Author (TO DO)
+}
+\setcounter{secnumdepth}{2}  
+%%%%%%%%%%%% additional packages
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Useful packages
+\usepackage{amsmath,amssymb,amsfonts,bbm}
+\usepackage{dsfont} % for the indicator function \mathds{1}
+\usepackage[svgnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+%\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Incompatible with AAAI
+%\usepackage[authoryear,round,longnamesfirst]{natbib} % Incompatible with AAAI
+\usepackage{url}
+\usepackage{soul}
+
+%% Useful packages
+%\usepackage{float}
+%\usepackage{algpseudocode}%
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{array}
+\usepackage{indentfirst}
+
+\usepackage{booktabs} % For formal tables
+\usepackage{etoc} % for table of content for appendix only
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{enumitem}
+
+% Image related packages
+\usepackage{verbatim}
+\usepackage[export]{adjustbox}
+\usepackage{subfig}
+\usepackage{epstopdf}
+\DeclareGraphicsExtensions{.png,.pdf,.eps,.jpg,.tif,.tiff,.ps} %MAR: moving PNG first
+\graphicspath{{img//}{img/yifei-work//}{img/wordclouds//}}
+
+%RJA added for \citet{} loved by social scientists the world over...
+%\usepackage{natbib}
+%but it messes with citation style already being used, so define \citet{} here:
+%\newcommand{\citet}[1]{\citeauthor{#1} (\citeyear{#1})}
+\newcommand{\citet}[1]{\citeauthor{#1}~\shortcite{#1}}
+\newcommand{\citep}{\cite}
+\newcommand{\citealp}[1]{\citeauthor{#1}~\citeyear{#1}}
+
+% Theorems and corrolaries
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{corollary}{Corollary}[section] %% initially: theorem instead of section
+%\newtheorem{lemma}[theorem]{Lemma}
+
+%package that allows me more colors
+\usepackage{soul}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\definecolor{navy}{rgb}{0.1, 0.1, 0.8}
+\definecolor{gray}{rgb}{0.6, 0.6, 0.6}
+\definecolor{myblue}{rgb}{.8, .8, 1}
+\definecolor{olive}{rgb}{0.1, 0.5, 0.1}
+
+%--------------------------------------------------
+
+%%%% comments -- ENABLE
+%\newcommand{\eat}[1]{}
+%\newcommand{\rev}[1]{{\color{Magenta}{#1}}}
+%\newcommand{\revA}[1]{{\color{navy}{#1}}}
+%\newcommand{\rvt}[1]{{\color{ForestGreen}{#1}}}
+%\newcommand{\rvr}[1]{{\color{brown}{#1}}}
+%\newcommand{\rvx}[1]{{\color{olive}{#1}}}
+%\newcommand{\oldversion}[1]{{\color{gray}{#1}}}
+%\newcommand{\verify}[1]{{\color{red}{#1}}}
+%\newcommand{\NOTE}[2]{
+% \todo{ {\bf #1}:~{#2}}
+%}
+%\newcommand{\TODO}[2]{
+% \hl{ \textbf{#1}: #2}
+%}
+%%%\newcommand{\TODO}[2]{ %% MAR: TODOs in a note
+%%% \todo[inline, color=green!40]{ {\bf #1}:~{#2}}
+%%%}
+% Adding notes in the margin (as opposed to the main body of the paper) helps to get
+% an idea of the real length of the paper
+%\setlength\marginparwidth{1.25cm}
+%\newcommand{\nb}[1]{\marginpar{\scriptsize #1}}
+
+%\newcommand{\Pd}{\mathds{P}}
+
+%--------------------------------------------------
+
+% macro for the \frac\partial madness
+%\newcommand{\fp}[2]{\frac{\partial #1}{\partial #2}}
+
+%% spacing tricks -- DISABLE
+%\newcommand{\titlemoveup}{\vspace{-0.mm}}
+%\newcommand{\secmoveup}{\vspace{-.0mm}} % {\vspace{-1.5mm}}
+%\newcommand{\textmoveup}{\vspace{-0.mm}}         	%{\vspace{-0.08in}}
+%\newcommand{\itemmoveup}{\vspace{-0.mm}}              %{\vspace{-0.04in}}
+%\newcommand{\eqmoveup}{\vspace{0.0mm}} %{\vspace{-2.4mm}}
+%\newcommand{\captionmoveup}{\eqmoveup\vspace{-0.0mm}}   %{\vspace{-2.4mm}}
+
+%%% spacing tricks -- ENABLE
+%\newcommand{\titlemoveup}{\vspace{-0.mm}}
+%\newcommand{\secmoveup}{\vspace{-.0mm}} % {\vspace{-1.5mm}}
+%\newcommand{\textmoveup}{\vspace{-0.mm}}         	%{\vspace{-0.08in}}
+%\newcommand{\itemmoveup}{\vspace{-0.mm}}              %{\vspace{-0.04in}}
+%\newcommand{\eqmoveup}{\vspace{-0.0mm}} %{\vspace{-2.4mm}}
+%\newcommand{\captionmoveup}{\eqmoveup\vspace{-0.9mm}}   %{\vspace{-2.4mm}}
+
+%%% sqished lists
+%\newcommand{\squishlist}{
+% \begin{list}{$\bullet$}
+%  { \setlength{\itemsep}{0pt}
+%     \setlength{\parsep}{3pt}
+%     \setlength{\topsep}{3pt}
+%     \setlength{\partopsep}{0pt}
+%     \setlength{\leftmargin}{1.5em}
+%     \setlength{\labelwidth}{1em}
+%     \setlength{\labelsep}{0.5em} } }
+%
+%\newcommand{\squishlisttwo}{
+% \begin{list}{$\bullet$}
+%  { \setlength{\itemsep}{0pt}
+%    \setlength{\parsep}{0pt}
+%    \setlength{\topsep}{0pt}
+%    \setlength{\partopsep}{0pt}
+%    \setlength{\leftmargin}{1.5em}
+%    \setlength{\labelwidth}{1.5em}
+%    \setlength{\labelsep}{0.5em} } }
+%
+%\newcommand{\squishend}{
+%  \end{list}  }
+
+%% dataset names
+\usepackage{xspace}
+\newcommand{\debate}{{\sc \#DebateNight}\xspace}
+\newcommand{\Protected}{\texttt{Protected}\xspace}
+\newcommand{\Human}{\texttt{Human}\xspace}
+\newcommand{\Bot}{\texttt{Bot}\xspace}
+\newcommand{\Suspended}{\texttt{Suspended}\xspace}
+
+\begin{document}
+ %% just a tag, to let know the etoc package not to show these sections.
+\etocdepthtag.toc{mtchapter}
+% The file aaai.sty is the style file for AAAI Press 
+% proceedings, working notes, and technical reports.
+%
+%\title{The role and influence of socialbots within retweet diffusion cascades during the 1st U.S. Presidential Debate (\debate)}
+\title{Distinguishing Russian Trolls On Twitter \\Using Approximate String Matching}
+\author{
+	% Marian-Andrei Rizoiu\textsuperscript{1}\textsuperscript{2} 
+	% \and Timothy Graham\textsuperscript{1} 
+	% \and Rui Zhang\textsuperscript{1}\textsuperscript{2}  \\
+	% {\bf \Large \and Yifei Zhang\textsuperscript{1}\textsuperscript{2} \and Robert Ackland\textsuperscript{1} \and Lexing Xie\textsuperscript{1}\textsuperscript{2}} \\
+	% \textsuperscript{1}The Australian National University,
+	% \textsuperscript{2}Data61 CSIRO\\
+	% Canberra, Australia.\\
+}
+
+\maketitle
+
+\begin{abstract}
+	\input{0-abstract}
+\end{abstract}
+
+\input{1-introduction}
+
+\input{2-related-work}
+
+\input{3-troll-dataset.tex}
+
+% \input{4-measures-dataset}
+
+\input{5-evaluation-user-influence}
+
+\input{6-results-findings}
+
+\input{7-conclusion}
+
+\vspace{0.2cm}
+\noindent{%\small
+\textbf{Acknowledgments.}
+This research is sponsored in part by the Air Force Research Laboratory, under agreement number FA2386-15-1-4018.
+%We thank the National Computational Infrastructure (NCI) for providing computational resources, supported by the Australian Government.
+}
+
+{ %\small
+\fontsize{9.0pt}{10.0pt}
+%\fontsize{9.5pt}{10.5pt}
+\selectfont
+\bibliography{paper}
+\bibliographystyle{aaai}
+}
+
+\input{appendix}
+
+\end{document}

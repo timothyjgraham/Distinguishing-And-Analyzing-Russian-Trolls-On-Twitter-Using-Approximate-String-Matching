@@ -1,0 +1,27 @@
+%!TEX root = paper.tex
+
+\begin{table}[!b]
+%\caption{Summary of notations and parameters in the paper, together with their interpretation. These notations are superscripted by $w$ when referring to cascade $w$ -- e.g. $\hat N_\infty^w$.}
+\caption{Summary of notations.}
+\small
+\centering
+\begin{tabular}{cp{5.5cm}}
+\toprule
+Notation & Interpretation \\ %\textbf{Significance and usage} \\ 
+\midrule
+	$G(V, E)$ & diffusion tree. In case the tree is unobserved, $G$ is a diffusion scenario. \\ 
+	$v \in V$ & node in the diffusion tree (i.e. retweets). \\ 
+%$\mu(t)$ & external events arrival rate. \\ 
+%\parbox[c]{1.4cm}{$e \in E$,\\ $e = \{a, b\}$} 
+% \begin{minipage}[c]{1.4cm}
+%  $e \in E$, $e = \{a, b\}$
+% \end{minipage} 
+	$e = \{v_a, v_b\} \in E$ & directed edge in the diffusion tree, tweet $v_b$ is a direct retweet of $v_a$.\\
+	$t_v$ & time of arrival of node $v$ (timestamp of the tweet). \\
+	$u_v$ & user that has emitted tweet $v$. \\
+	$m_v$ & local influence (i.e. number of followers) of user $u_v$. \\
+\bottomrule
+\end{tabular}
+\label{tab:parameters}
+%\captionmoveup
+\end{table}

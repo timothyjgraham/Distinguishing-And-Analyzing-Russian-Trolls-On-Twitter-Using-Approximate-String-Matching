@@ -1,0 +1,59 @@
+%!TEX root = main.tex
+
+%% latex table generated in R 3.4.0 by xtable 1.8-2 package
+%% Thu Nov 30 17:07:53 2017
+%\begin{table}[tb]
+%	\renewcommand{\cellalign}{cr}
+%	\scriptsize
+%%	\fontsize{6.5pt}%{10.0pt}
+%%	\selectfont
+%	\setlength{\tabcolsep}{5pt}
+%	\centering
+%	\caption{
+%		Tabulating population volumes and percentages of politically polarized users over four populations: \Protected, \Human, \Suspended and \Bot.
+%%		Retrieving botness score failed for 4,822 users.
+%	}
+%	\begin{tabular}{rr|rrr|rr}
+%		\toprule
+%			& All & Polarized & Dem. & Rep. & Dem. \% & Rep. \% \\ 
+%  		\midrule
+%			All & 1,451,388 & 44,299 & 21,676 & 22,623 & 48.93\% & 51.07\% \\ 
+%  			\Protected & 45,316 & 1,245 & 585 & 660 & 46.99\% & 53.01\% \\ 
+%			\makecell{\Human\\($\zeta \leq 0.2$)} & 499,822 & 11,972 & 5,376 & 6,596 & 44.90\% & 55.10\% \\ 
+%  			\Suspended & 10,162 & 265 & 111 & 154 & 41.89\% & 58.11\% \\ 
+%  			\makecell{\Bot\\($\zeta \geq 0.6$)} & 17,561 & 435 & 185 & 250 & 42.53\% & 57.47\% \\ 
+%   		\bottomrule
+%	\end{tabular}
+%	\label{tab:populations-effectives}
+%	\captionmoveup
+%\end{table}
+
+% MAR: one idea is to transpose this table, because the scriptsize above is ugly.
+%		But extra work is required.
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Thu Nov 30 17:07:53 2017
+\begin{table}[tb]
+	\renewcommand{\cellalign}{cr}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\centering
+	\caption{
+		Tabulating population volumes and percentages of politically polarized users over four populations: \Protected, \Human, \Suspended and \Bot.
+%		Retrieving botness score failed for 4,822 users.
+	}
+	\begin{tabular}{rrrrrr}
+		\toprule
+			& All & \texttt{Prot.} & \Human & \texttt{Susp.} & \Bot \\
+  		\midrule		
+			All & 1,451,388 & 45,316 & 499,822 & 10,162 & 17,561 \\
+			Polarized & 44,299 & 1,245 & 11,972 & 265 & 435 \\
+			Democrat & 21,676 & 585 & 5,376 & 111 & 185 \\
+			Republican & 22,623 & 660 & 6,596 & 154 & 250 \\
+		\midrule
+			Dem. \% & 48.93\% & 46.99\% & 44.90\% & 41.89\% & 42.53\%\\
+			Rep. \% & 51.07\% & 53.01\% & 55.10\% & 58.11\% & 57.47\%\\ 
+   		\bottomrule
+	\end{tabular}
+	\label{tab:populations-effectives}
+%	\captionmoveup
+\end{table}

@@ -1,0 +1,97 @@
+%!TEX root = main.tex
+
+\begin{figure*}[tbp]
+	\centering
+	\begin{minipage}{\textwidth}
+		 \[
+ \underbrace{\left[
+\begin{matrix}
+ \textcolor{gray}{1}  &\textcolor{blue}{M_{12}}  &\textcolor{red}{M_{13}}   &\textcolor{ForestGreen}{M_{14}}      & \cdots    & M_{1n} \\
+ 0                    &\textcolor{blue}{1}   	 &\textcolor{red}{M_{23}}   &\textcolor{ForestGreen}{M_{24}}      & \cdots    & M_{2n} \\
+ 0                    &0             			 &\textcolor{red}{1}   	    &\textcolor{ForestGreen}{M_{34}}      & \cdots    & M_{3n} \\
+ 0                    &0             			 &0             			&\textcolor{ForestGreen}{1}   		& \cdots    & M_{4n} \\
+ \vdots    		      &\vdots            		 & \vdots       			&\vdots       				    & \ddots    & \vdots \\
+ 0         		      &0             			 &0                         &0             				    & \cdots    & 1      \\
+\end{matrix}   
+\right]}_{\textbf{M}} 
+ \underbrace{\left[
+\begin{matrix}
+ 1         &\textcolor{gray}{P_{12}}       &\textcolor{blue}{P_{13}}       &\textcolor{red}{P_{14}}        & \cdots    & P_{1n} \\
+ 0         &1             	    		   &\textcolor{blue}{P_{23}}       &\textcolor{red}{P_{24}}        & \cdots    & P_{2n} \\
+ 0         &0             				   &1					   		   &\textcolor{red}{P_{34}}         & \cdots    & P_{3n} \\
+ 0         &0             				   &0             				   &1					  		    & \cdots    & P_{4n} \\
+ \vdots    &\vdots            			   & \vdots       				   & \vdots       				    & \ddots    & \vdots \\
+ 0         &0             				   &0                              &0             					& \cdots    & 1      \\
+\end{matrix}   
+\right]}_{\textbf{P}}
+\]
+\[
+\begin{alignedat}{3}
+&\begin{array}{rl}&M_{11} = 1 \end{array} &k =1\ \ \ \ \ &\\ 
+&\begin{array}{rl}&M_{12} =P_{12}M_{11}\end{array} &k= 2 \ \ \ \ &\left[\textcolor{gray}{P_{12}}\right]\left[\textcolor{gray}{M_{11}}\right] = 
+\left[\textcolor{blue}{M_{12}}\right]\\
+&\begin{array}{rl}
+	&M_{13} =P_{13}M_{11}+ P_{23}M_{12}\\
+	&M_{23} =P_{13}M_{21}+ P_{23}M_{22}
+\end{array}
+\Bigg\} &k = 3 \ \ \ \ 
+&\left[
+\begin{matrix}
+\textcolor{gray}{1}  &\textcolor{blue}{M_{12}} \\
+0                    &\textcolor{blue}{1}   	
+\end{matrix}
+\right]
+\left[
+\begin{matrix}
+\textcolor{blue}{P_{13}}\\
+\textcolor{blue}{P_{23}}
+\end{matrix}
+\right]=
+\left[
+\begin{matrix}
+\textcolor{red}{M_{13}}\\
+\textcolor{red}{M_{23}}
+\end{matrix}
+\right]\\
+&\begin{array}{rl}
+	&M_{14} =P_{14}M_{11}+ P_{24}M_{12}+ P_{34}M_{13}\\
+	&M_{24} =P_{14}M_{21}+ P_{24}M_{22}+ P_{34}M_{23}\\
+    &M_{34} =P_{14}M_{31}+ P_{24}M_{32}+ P_{34}M_{33}
+\end{array}
+\Bigg\} &k = 4 \ \ \ \ 
+&\left[
+\begin{matrix}
+ \textcolor{gray}{1}  &\textcolor{blue}{M_{12}}  &\textcolor{red}{M_{13}}\\
+ 0                    &\textcolor{blue}{1}   	 &\textcolor{red}{M_{23}}\\
+ 0                    &0             			 &\textcolor{red}{1}   	 
+\end{matrix}
+\right]
+\left[
+\begin{matrix}
+\textcolor{red}{P_{14}}\\
+\textcolor{red}{P_{24}}\\
+\textcolor{red}{P_{34}}
+\end{matrix}
+\right]=
+\left[
+\begin{matrix}
+\textcolor{ForestGreen}{M_{14}}\\
+\textcolor{ForestGreen}{M_{24}}\\
+\textcolor{ForestGreen}{M_{34}}
+\end{matrix}
+\right]\\
+\end{alignedat}
+\]
+	\end{minipage}
+	\caption{
+		Exemplification of the efficient computation of the first four columns of matrix $M$.
+%		Algorithm~\ref{alg:casin} which describes in the previous section can also be written in  matrix processing, The element of the matrix $M_{ij}$ can be obtained by the following steps:	
+%		According to the equation(7), 
+		Each $k^{th}$ column vector of matrix $M$ is colored correspondingly with the column vector in $P$ used in the multiplication.
+%		
+%		
+%		can be computed by sub-matrix with size of $k-1\times k-1$ in $M_{ji}$ multiplying $k$th column vector with same color in $P_{ji}$.
+%		Therefore, given matrix $P_{ji}$, from $k = 1$, $M$ can be computed incrementally follow the process above.		
+	}
+	\label{fig:matrix-operations-example}
+\end{figure*}
