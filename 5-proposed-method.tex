@@ -75,41 +75,41 @@ For example, given sentences $s_1 =$ ``I like music'', $s_2 =$ ``I love music'' 
 \subsection{Semantic Edit Distance}
 % \todo{It's okay to write `Semantic Edit Distance'}
 
-Formally, given two strings $s_1$ and $s_2$ on an alphabet $\Sigma$ and a semantic similarity matrix of the alphabet, the semantic edit distance $sed(s_1,s_2)$ is the minimum weight of editing operations required to transform $s_1$ into $s_2$. Similar to edit distance, one of the simplest sets of edit operations allow: (i) insert a single symbol into a string; (ii) delete a single symbol from a string and (iii) replace a single symbol of a string by another single symbol, with associated non-negative weight functions $w_{ins} (x)$, $w_{del} (x)$ and $w_{sub} (x,y)$ with the operations. The weight functions are defined based on the semantic similarity matrix. If the semantic similarity of two symbols is large, the value of weight functions tend to be small. In other words, the weight of operation is the dissimilarity of corresponding two symbols. Thus, if two strings are more semantically similar, the semantic edit distance between two strings is smaller. 
+Formally, given two strings $s_1$ and $s_2$ on an alphabet $\Sigma$ and a semantic similarity matrix of the alphabet, the semantic edit distance $\sed(s_1,s_2)$ is the minimum weight of editing operations required to transform $s_1$ into $s_2$. Similar to edit distance, one of the simplest sets of edit operations allow: (i) insert a single symbol into a string; (ii) delete a single symbol from a string and (iii) replace a single symbol of a string by another single symbol, with associated non-negative weight functions $w_{ins} (x)$, $w_{del} (x)$ and $w_{sub} (x,y)$ with the operations. The weight functions are defined based on the semantic similarity matrix. If the semantic similarity of two symbols is large, the value of weight functions tend to be small. In other words, the weight of operation is the dissimilarity of corresponding two symbols. Thus, if two strings are more semantically similar, the semantic edit distance between two strings is smaller. 
 
-The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $sed(n,m)$, defined by the recurrence.
+The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $\sed(n,m)$, defined by the recurrence.
 
 \begin{equation}
-  sed(i,0) = \sum\limits_{k=1}^i w_{del} (a_k) \quad \text{for } 1 \leq i \leq n
+  \sed(i,0) = \sum\limits_{k=1}^i w_{del} (a_k) \quad \text{for } 1 \leq i \leq n
 \end{equation}
 \begin{equation}
-  sed(0,j) = \sum\limits_{k=1}^j w_{ins} (b_k) \quad \text{for } 1 \leq j \leq m
+  \sed(0,j) = \sum\limits_{k=1}^j w_{ins} (b_k) \quad \text{for } 1 \leq j \leq m
 \end{equation}
 \begin{equation}
-  sed(i,j) =
+  \sed(i,j) =
   \begin{cases}
-    sed(i-1,j-1) & \quad \text{if } a_i = b_j\\
-    min 
+    \sed(i-1,j-1) & \quad \text{if } a_i = b_j\\
+    \min 
     \begin{cases}
-        sed(i-1,j) + w_{del} (a_i)\\
-        sed(i,j-1) + w_{ins} (b_j)\\
-        sed(i-1,j-1) + w_{sub} (a_i,b_j)
+        \sed(i-1,j) + w_{del} (a_i)\\
+        \sed(i,j-1) + w_{ins} (b_j)\\
+        \sed(i-1,j-1) + w_{sub} (a_i,b_j)
     \end{cases}
     & \quad \text{if } a_i \neq b_j
   \end{cases}
 \end{equation}
 
-We denote $sim(x,y)$ as the similarity of symbols $x$ and $y$, and $0 \leq sim(x,y) \leq 1$, the larger value indicates the more similar two symbols are, and the small value indicates the symbols are dissimilar. The weight functions are defined based on the semantic similarity, as it indicates the cost of the editing operation, the more similar two strings are, the fewer the editing operation should cost, in other words, the cost of operation equals to the dissimilarity of two symbols. Thus, the weight functions are defined based on the semantic similarity matrix as follows:
+We denote $\simt(x,y)$ as the similarity of symbols $x$ and $y$, and $0 \leq \simt(x,y) \leq 1$, the larger value indicates the more similar two symbols are, and the small value indicates the symbols are dissimilar. The weight functions are defined based on the semantic similarity, as it indicates the cost of the editing operation, the more similar two strings are, the fewer the editing operation should cost, in other words, the cost of operation equals to the dissimilarity of two symbols. Thus, the weight functions are defined based on the semantic similarity matrix as follows:
 % \todo{This is a little unclear. Consider expanding your explanation a bit.}
 
 \begin{equation} \label{eqn:del}
-  w_{del} (a_i) = 1 - sim(a_i, a_{i-1})
+  w_{del} (a_i) = 1 - \simt(a_i, a_{i-1})
 \end{equation}
 \begin{equation} \label{eqn:ins}
-  w_{ins} (b_i) = 1 - sim(b_i, b_{i-1})
+  w_{ins} (b_i) = 1 - \simt(b_i, b_{i-1})
 \end{equation}
 \begin{equation} \label{eqn:sub}
-  w_{sub} (a_i,b_j) = 1 - sim(a_i, b_j)
+  w_{sub} (a_i,b_j) = 1 - \simt(a_i, b_j)
 \end{equation}
 
 Since the similarity ranges from 0 to 1, we can simply compute the weight function by using 1 minus similarity. 
@@ -180,7 +180,7 @@ Cosine similarity is a measure of similarity between two non-zero vectors of a m
 Given two vectors $\bf{x}$ and $\bf{y}$, the cosine similarity is represented as follows,
 
 \begin{equation}  \label{eqn:cosine}
-  sim(\bf{x},\bf{y}) = \cos(\bf{x},\bf{y}) = \frac{\bf{x}^\top \bf{y}}{\|{\bf{x}}\| \|{\bf{y}}\|}
+  \simt(\bf{x},\bf{y}) = \cos(\bf{x},\bf{y}) = \frac{\bf{x}^\top \bf{y}}{\|{\bf{x}}\| \|{\bf{y}}\|}
 \end{equation}
 
 In order to apply cosine similarity to compute the semantic similarity, for the co-occurrence matrix, each row (or column) of it can be regarded as a vector of the corresponding symbol $s_i$ (i.e. $s_i=[x_{i1}x_{i2}...x_{in}]$), as the vector contains the co-occurrence numbers between this symbol and all other symbols, thus the cosine similarity of the co-occurrence matrix can be computed according to the equation~\ref{eqn:cosine}. The results of cosine similarity are also in the range of 0 to 1.
@@ -195,7 +195,7 @@ Both edit distances and semantic edit distances between every pair of tweets are
 Thus, we aim to eliminate the impact of the length of tweets on distance, and we can normalize the the result by using the semantic edit distance divided by the edit distance. i.e. 
 
 \begin{equation}
-  \text{For tweets } t_1 \text{ and } t_2, \quad norm(t_1, t_2)=\frac{sed(t_1, t_2)}{ed(t_1, t_2)}
+  \text{For tweets } t_1 \text{ and } t_2, \quad \text{norm}(t_1, t_2)=\frac{\sed(t_1, t_2)}{\ed(t_1, t_2)}
 \end{equation}
 
 Therefore, we can eventually obtain a distance matrix of the tweets, with each element of the matrix representing the normalized distance between the corresponding two tweets.
@@ -245,26 +245,26 @@ According to the dynamic programming, we construct a matrix with two dimensions 
 \SetAlgoLined
 % \KwResult{Write here the result }
 \SetKwInOut{Input}{input}
-\Input{two strings $a$ and $b$, semantic similarity matrix $sim$}
- $n = len(a)$\;
- $m = len(b)$\;
- $sed[i,j] = 0$\;
+\Input{two strings $a$ and $b$, semantic similarity matrix $S$}
+ $n = \text{len}(a)$\;
+ $m = \text{len}(b)$\;
+ $\sed[i,j] = 0$\;
  \For{$i \gets 0$ \KwTo $n$}{
-    $sed[i,0] = sed[i-1,0]+(1-sim(a_i,a_{i-1}))$\;
+    $\sed[i,0] = \sed[i-1,0]+(1-S[a_i,a_{i-1}])$\;
  }
  \For{$j \gets 0$ \KwTo $m$}{
-    $sed[0,j] = sed[0,j-1]+(1-sim(b_j,b_{j-1}))$\;
+    $\sed[0,j] = \sed[0,j-1]+(1-S[b_j,b_{j-1}])$\;
  }
  \For{$ i \gets 1 $ \KwTo $n$}{
   \For{$j\gets1$ \KwTo $m$}{
     \If{$a_i == b_j$}{
-     $sed[i,j] = sed[i-1,j-1]$\;
+     $\sed[i,j] = \sed[i-1,j-1]$\;
      } \Else {
-     $sed[i,j] = min(sed[i-1,j]+(1-sim(a_i,a_{i-1})), sed[i,j-1]+(1-sim(b_j,b_{j-1})), sed[i-1,j-1]+(1-sim(a_i,b_j)))$\;
+     $\sed[i,j] = \min(\sed[i-1,j]+(1-S[a_i,a_{i-1}]), \sed[i,j-1]+(1-S[b_j,b_{j-1}]), \sed[i-1,j-1]+(1- S[a_i,b_j]))$\;
     }
   }
  }
- \Return $sed[n,m]$
+ \Return $\sed[n,m]$
  \caption{Semantic Edit Distance}
 \end{algorithm}
 
