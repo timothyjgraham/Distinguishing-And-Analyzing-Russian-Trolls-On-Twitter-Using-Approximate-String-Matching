@@ -1,274 +1,206 @@
 %!TEX root = main.tex
 
-\section{Method}
-\label{sec:evaluation-influence}
+% \section{N-gram Modelling}
+% \label{sec:ngram}
 
-In this section, we will discuss the methods used in this study, including text pre-processing of the Russian Troll tweets, details of the novel \textit{semantic edit distance}, and the evaluation measures.
+% N-gram modelling is one of the most widely used methods in natural language processing. It is a contiguous sequence of n tokens from the given text. Given a sentence, we can construct a list of n-grams from the sentence by finding sequences of words that occur next to each other. Normally, an n-gram of size 1 is referred to unigram, an n-gram of size 2 is referred to bigram, and size 3 is trigram, etc. 
 
-\section{Data Preprocessing}
-\label{sec:dp}
+% Only unigram and bigram are used in this research, as they are most commonly used, and for the purposes of this study it is enough to extract the features of texts by using unigram and bigram tokens. 
 
-The goal of performing textual preprocessing is to convert the tweet text to a list of tokens that would be useful and effective for further text mining and analysis. The main preprocessing steps include tokenization, stopwords removal and normalization. 
+% Unigrams take one token as a feature. The main disadvantage of doing this is that we loss positional information in a unigram feature representation. While we compute the similarity of tokens, we also want to learn about the context or sentiment of using specific tokens. To address this, bigrams are used as a feature, which is using contiguous sequences of two words to construct features. For example, in the Russian Troll dataset, both Left Troll and Right Troll would highly mention ``Trump'', if we use unigram, the token ``Trump'' will be high frequency used with other tokens in both Left Troll and Right Troll tweets, However, if bigram is used, it may introduce some unique information in Left Trolls or Right Trolls.
 
-\subsection{Tokenization}
-
-Tokenization is a process which splits long strings of text into words, n-grams, numbers, and/or punctuation. Further processing would be performed after the text has been appropriately tokenized.
-
-A customized NLTK tokenizer based on a regex pattern is defined, which preserves hashtags (string start with \#), mentions (string start with @), abbreviations (e.g. U.S.A.), words with hyphens or apostrophe (e.g. co-occurrence, it's), etc, when breaking documents into a list of tokens.
-% \todo[inline]{These regular expressions can also be provided in the appendix if you like.}
-
-\subsection{Stopwords Removal}
-\label{ssec:stopwords}
-
-Since we attempt to distinguish the category of Russian Trolls by using the content of tweets, the tokens which are unique and typical to particular categories would be significant and worthwhile. However, there are also some noisy tokens that are common English words (known as \textit{stopwords}, such as `the' and `and') which have a high frequency in both categories but are less significant than words that appear less commonly but are more closely associated to each particular category. Thus, it is often useful to remove the stopwords. Two methods to remove stopwords are illustrated as follows. 
-
-\subsubsection{Regular Stopwords Removal}
-% \todo[inline]{DK: Tokenization should come first, because it is impossible to remove stopwords(noise) without tokenization, i.e. tokenization $\rightarrow$ stopwords removal.}
-
-As we are handling tweets text data, which is not quite the same as normal English text, the tweets text would include some URLs, Emojis, Smileys (e.g. ``:-)'') and Reserved words (e.g. ``RT'', ``via''), which would be removed in this study as we attempt to focus on the text itself. However, URLs, punctuation and Emojis might be useful information that we can exploit, and we might try to use that kind of information in the future work. Besides, the English stopwords (e.g. ``it'', ``and'', ``because'') and punctuations should be removed. Although the use of English stopwords and punctuations in the text is crucial and frequent, they do not convey any document specific information. Similarly, numbers are also not useful for further processing, which should be removed. 
-
-% \textit{Actually, URLS, punctuation and emojis might be useful information that we can exploit, but in this study we remove it to focus on the text itself. Future work might try to use that kind of information.}
-% \textit{I would consider moving this sentence to the previous paragraph where you introduce stopwords.} 
-We use the NLTK standard English stopwords list and standard punctuations list to remove English stopwords and punctuations from the list of tokens. 
-
-\subsubsection{Top-N TF Removal}
-
-For the top-n TF removal, in addition to the regular stopwords removal, we also remove the top-n TF tokens. 
-
-TF, short for term frequency, indicates the number occurrences of term $t$ in document $d$. 
-
-One simplest way to remove the noise tokens is to remove the top-n frequency tokens, because high frequency often indicates that the importance of the token is small, and it is more likely to be frequent in both categories' tweets. \cite{saif2014stopwords} validate that remove top-frequency words helps improve the effectiveness of tweets processing according to the Zipf's law. 
-
-\subsection{Normalization}
-
-Normalization refers to a series of tasks, which includes converting all text to the lower case, expanding contractions, stemming, and lemmatization. 
-
-Since tweets are posted on the Internet, it would be slightly different from the formal written language and spoken language, there would be many ``text language'', which are abbreviations and slangs that commonly used with Internet-based communication. For example, ``AFAIK'' means ``As Far As I Know'', ``b4'' means ``before'', and ``LOL'' means ``Laughing Out Loud'', etc. Besides, there would be many contractions, such as ``you're'' for ``you are'', ``yall'' for ``you all''. Thus, we use the Contractions library to expand contractions. 
-% \todo{This sentence is slightly unclear - consider rephrasing.}
-
-Both stemming and lemmatization are designed to simplify the various forms of a word to a common basic form. Stemming is the process of reducing affixes from a word to obtain their word stem, base or root form (e.g. running to run). Lemmatization is related to stemming, but it only attempts to remove inflectional endings and return the word's lemma (e.g. better to good). In this study, we use Snowball Stemmer and WordNet Lemmatizer from NLTK library.
-% \todo[inline]{Which lemmatiser or stemmer did you use for the experiment?}
-
-
-\section{N-gram Modelling}
-\label{sec:ngram}
-
-N-gram modelling is one of the most widely used methods in natural language processing. It is a contiguous sequence of n tokens from the given text. Given a sentence, we can construct a list of n-grams from the sentence by finding sequences of words that occur next to each other. Normally, an n-gram of size 1 is referred to unigram, an n-gram of size 2 is referred to bigram, and size 3 is trigram, etc. 
-
-Only unigram and bigram are used in this research, as they are most commonly used, and for the purposes of this study it is enough to extract the features of texts by using unigram and bigram tokens. 
-
-Unigrams take one token as a feature. The main disadvantage of doing this is that we loss positional information in a unigram feature representation. While we compute the similarity of tokens, we also want to learn about the context or sentiment of using specific tokens. To address this, bigrams are used as a feature, which is using contiguous sequences of two words to construct features. For example, in the Russian Troll dataset, both Left Troll and Right Troll would highly mention ``Trump'', if we use unigram, the token ``Trump'' will be high frequency used with other tokens in both Left Troll and Right Troll tweets, However, if bigram is used, it may introduce some unique information in Left Trolls or Right Trolls.
-
-\section{Semantic Edit Distance}
+\section{Troll Classification}
 \label{sec:sed}
 
-Broadly, semantic edit distance is the edit distance taking the semantic similarity of tokens of strings into account. 
+In this section, we propose a supervised method to identify a political ideology of an individual based solely on their authored text. We first formalise the overall classification framework where a label of an account is predicted by an aggregated labels of individual tweets authored by the account, and then, formalise a way to predict a label of individual tweets based on a variant of edit distance metric.
 
-Semantic similarity is a measure of a set of symbols, where the distance between symbols is based on the similarity of the corresponding meaning and semantic content, instead of similarity with respect to the syntactical representation (e.g. the format and sequence of strings). The term semantic similarity is often confused with the term semantic relatedness, which is actually different. Semantic similarity is more specific than semantic relatedness and often refer to synonymous, but the latter also includes concepts such as antonymy. For example, ``love'' and ``like'' are semantic similar, ``love'' and ``hate'' are semantic related, but ``love'' and ``hate'' are not semantic similar, as they have opposite meanings.
+\subsection{Time-sensitive KNN}
+By following the social theory, an identity of an individual is the trace of the individual over time. In Twitter, a trace of an individual account can be formulated as a sequence of tweets authored by the same account. Thus, our goal aims to identify a political ideology of accounts based on their tweets. Unlike a general supervised classification problem, where pairs of an input and label are provided as an example, our classification algorithm needs to predict a label from a set of ordered text snippets. 
 
-\subsection{Limitation of Edit Distance}
+To tackle this problem, we assume that each individual tweet can be labelled by one of our target labels. For example, in our dataset, a tweet can be classified into one of three categories, Left and Right Trolls and News Feed. 
+We further assume that if a tweet is written by an author whose label is already known i.e. in a training set, then we label the tweet according to the label of the author. 
+While each individual tweet may not correctly reflect the political ideology of an account, for example, some of Right Troll may advocate the other side to create more confusion from time to time, when they are aggregated, it should reflect the correct ideology of the account.
+We then formulate an account classification as majority voting problem, where the majority label of tweets is the predicted label of the corresponding account. 
+Now the question is then how we can classify the label of individual tweets given a set of training accounts.
 
-As edit distance only compare the differences between the characters of strings, it can only reflect the similarity of strings in format. However, in some situations, in particular to analyze the similarity of text, we need to take the semantic similarity of strings into account. 
+To classify the labels of tweets, we propose a variant of $k$-nearest neighbour algorithm (KNN) named as a time-sensitive KNN. A KNN classifies a data point based on the majority labels of $k$-nearest neighbour based on distances from the data point to the other data points whose labels are known. Let $x_i$ and $x_j$ be representations of two tweets $i$ and $j$ and $t_{x_i}$ represent the written time of tweet $i$. In time-sensitive KNN, a distance between two tweets $i$ and $j$ is formulated as
+\begin{align}
+    D(x_i, x_j) = \dist(x_i, x_j) \times \exp(\theta |t_{x_i} - t_{x_j}|)^{-1},
+    \label{eqn:tsknn}
+\end{align}
+where $\dist(x_i, x_j)$ measures a distance between textual representation of $x_i$ and $x_j$, which we further discuss details in the next section, and the inverse exponential term increases the overall distance between two tweets exponentially based on their time differences. The intuition is that even though two tweets are similar in terms of their textual representation, the underlying meaning of the text can vary based on the written time of the text. Therefore, the inverse exponential function pushes away two tweets written in distant time ranges. For instance, hashtag \#MeToo had been used to represent the adoption of another person's view in a political discourses in early 2016, whereas the meaning of the same hashtag has been dramatically changed since the emergence of MeToo social movement.
 
-For example, given sentences $s_1 =$ ``I like music'', $s_2 =$ ``I love music'' and $s_3 =$ ``I hate music'', every word can be considered as a symbol of the string, thus $ed(s_1, s_2) = ed(s_2, s_3) = 1$. However, ``love'' and ``like'' are more semantic similar, in this situation the actual distance between $s_1$ and $s_2$ should be less than the distance between $s_2$ and $s_3$.
 
 \subsection{Semantic Edit Distance}
-% \todo{It's okay to write `Semantic Edit Distance'}
+We propose a new distance metric which can capture semantic distance between two sequence of symbols based on the edit distance (ED) metric. The ED is a method of quantifying the similarity of two strings by calculating the minimum value of the required edit operations to transform one string into the other. There may be different sets of operations according to the definition of ED. The most common form of ED is known as Levenshtein distance. In Levenshtein's original definition, the edit operations include the insertion, deletion and substitution of a symbol in the string, and each of these operations has a unit cost, so the original ED is equal to the minimum number of the required operations to transform one string into the other. 
 
-Formally, given two strings $s_1$ and $s_2$ on an alphabet $\Sigma$ and a semantic similarity matrix of the alphabet, the semantic edit distance $\sed(s_1,s_2)$ is the minimum weight of editing operations required to transform $s_1$ into $s_2$. Similar to edit distance, one of the simplest sets of edit operations allow: (i) insert a single symbol into a string; (ii) delete a single symbol from a string and (iii) replace a single symbol of a string by another single symbol, with associated non-negative weight functions $w_{ins} (x)$, $w_{del} (x)$ and $w_{sub} (x,y)$ with the operations. The weight functions are defined based on the semantic similarity matrix. If the semantic similarity of two symbols is large, the value of weight functions tend to be small. In other words, the weight of operation is the dissimilarity of corresponding two symbols. Thus, if two strings are more semantically similar, the semantic edit distance between two strings is smaller. 
-
-The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $\sed(n,m)$, defined by the recurrence.
-
-\begin{equation}
-  \sed(i,0) = \sum\limits_{k=1}^i w_{del} (a_k) \quad \text{for } 1 \leq i \leq n
-\end{equation}
-\begin{equation}
-  \sed(0,j) = \sum\limits_{k=1}^j w_{ins} (b_k) \quad \text{for } 1 \leq j \leq m
-\end{equation}
-\begin{equation}
-  \sed(i,j) =
+Formally, given two sequences $\boldsymbol{a} = a_1, a_2, ..., a_n$ and $\boldsymbol{b} = b_1, b_2, ..., b_m$ with a finite set of symbols $a_i, b_j \in \Sigma$, the edit distance $\sed(\boldsymbol{a},\boldsymbol{b})$ is the minimum cost of editing operations required to transform $\boldsymbol{a}$ into $\boldsymbol{b}$ via three operations: (i) insert a single symbol into a string; (ii) delete a single symbol from a string and (iii) replace a single symbol of a string by another single symbol, associated with non-negative weight cost $w_{\ins} (x)$, $w_{\del} (x)$ and $w_{\sub} (x,y)$, respectively. 
+Let $\boldsymbol{a} = a_1, a_2, ..., a_n$ and $\boldsymbol{b} = b_1, b_2, ..., b_m$ be sequences of $n$ and $m$ symbols, respectively. The edit distance between $\boldsymbol{a}$ and $\boldsymbol{b}$ is given by $\ed(n,m)$, defined recursively,
+\begin{align*}
+  \ed(i,0) =& \sum\limits_{k=1}^i w_{\del} (a_k) \hspace{6.5em} \text{for } 1 \leq i \leq n\\
+  \ed(0,j) =& \sum\limits_{k=1}^j w_{\ins} (b_k) \hspace{6.4em} \text{for } 1 \leq j \leq m\\
+  \ed(i,j) =&
   \begin{cases}
-    \sed(i-1,j-1) & \quad \text{if } a_i = b_j\\
+    \ed(i-1,j-1) \hfill \text{if } a_i = b_j\\
     \min 
     \begin{cases}
-        \sed(i-1,j) + w_{del} (a_i)\\
-        \sed(i,j-1) + w_{ins} (b_j)\\
-        \sed(i-1,j-1) + w_{sub} (a_i,b_j)
+        \ed(i-1,j) + w_{\del} (a_i)\\
+        \ed(i,j-1) + w_{\ins} (b_j)\\
+        \ed(i-1,j-1) + w_{\sub} (a_i,b_j)
     \end{cases}
-    & \quad \text{if } a_i \neq b_j
+    \\ \hfill \text{Otherwise,}
   \end{cases}
-\end{equation}
+\end{align*}
+In the original ED, each of three operation is often assumed to have an unit cost. The unit cost assumption is convenient to measure the distances, however, does not reflect the underlying semantic distances between sequences.
+For example, given sentences $\boldsymbol{s}_1 =$ ``I like music'', $\boldsymbol{s}_2 =$ ``I love music'' and $\boldsymbol{s}_3 =$ ``I hate music'', $\ed(\boldsymbol{s}_1, \boldsymbol{s}_2) = \ed(\boldsymbol{s}_2, \boldsymbol{s}_3) = 1$ if we assume each symbol represents each word token. However, ``love'' and ``like'' are more semantic similar, in this situation a semantic distance between $\boldsymbol{s}_1$ and $\boldsymbol{s}_2$ should be less than the distance between $\boldsymbol{s}_2$ and $\boldsymbol{s}_3$. Note that given two strings, the original ED measure the minimum number of character level operations. Although, the character level ED is convenient in some cases such as finding typos, it may not be efficient to measure semantic similarity between two tweets. In this work, we only consider about a word level ED, where a tweet is represented as a sequence of words, so that the ED measures the minimum number of word insertion, deletion, and substitution between two sequences of words.
 
-We denote $\simt(x,y)$ as the similarity of symbols $x$ and $y$, and $0 \leq \simt(x,y) \leq 1$, the larger value indicates the more similar two symbols are, and the small value indicates the symbols are dissimilar. The weight functions are defined based on the semantic similarity, as it indicates the cost of the editing operation, the more similar two strings are, the fewer the editing operation should cost, in other words, the cost of operation equals to the dissimilarity of two symbols. Thus, the weight functions are defined based on the semantic similarity matrix as follows:
-% \todo{This is a little unclear. Consider expanding your explanation a bit.}
-
-\begin{equation} \label{eqn:del}
-  w_{del} (a_i) = 1 - \simt(a_i, a_{i-1})
-\end{equation}
-\begin{equation} \label{eqn:ins}
-  w_{ins} (b_i) = 1 - \simt(b_i, b_{i-1})
-\end{equation}
-\begin{equation} \label{eqn:sub}
-  w_{sub} (a_i,b_j) = 1 - \simt(a_i, b_j)
-\end{equation}
-
-Since the similarity ranges from 0 to 1, we can simply compute the weight function by using 1 minus similarity. 
-
-While we are comparing two strings $a = a_1...a_n$ and $b = b_1...b_m$,
-
+To capture the semantic similarity using edit distance metric, we propose the edit distance endowed with novel cost functions of the three edit operations, named semantic edit distance (SED). To do this, we first compute the co-occurrence matrix between different words in a corpus. To construct co-occurrence matrix, we count the number of times a pair of words is used in the same tweet.
+After that, to compute the semantic similarity between two words, we compute the cosine similarity between two co-occurrence vector corresponding to the rows of the corresponding words.
+We denote $\simt(x,y)$ as the similarity of symbols $x$ and $y$, and $0 \leq \simt(x,y) \leq 1$ since the cosine similarity ranges between 0 and 1. The weight functions are defined based on the semantic similarity, as it indicates the cost of the editing operation, the more similar two strings are, the fewer the editing operation should cost, in other words, the cost of operation equals to the dissimilarity of two symbols. Thus, the weight functions are defined based on the semantic similarity matrix as follows:
+\begin{align} 
+\label{eqn:del}
+  w_{\del} (a_i) &= 1 - \simt(a_i, a_{i-1})\\
+% \end{equation}
+% \begin{equation} 
+\label{eqn:ins}
+  w_{\ins} (b_i) &= 1 - \simt(b_i, b_{i-1})\\
+% \end{equation}
+% \begin{equation}
+\label{eqn:sub}
+  w_{\sub} (a_i,b_j) &= 1 - \simt(a_i, b_j)
+\end{align}
+The intuitions behind each of cost function are
 \begin{itemize}
-  \item For the deletion, we delete the last symbol $a_i$ from string $a$, if two consecutive symbols of string $a$ are semantic similar, i.e. $sim(a_i, a_{i-1})$ is large, deleting the latter one $a_i$ would not cost much, and the deletion operation would have little influence on the semantic edit distance between two strings. Thus, the weight of the deletion can be defined as equation~\ref{eqn:del}.
-  \item Similarly for the insertion operation, we insert the last symbol $b_j$ into string $b$, if two consecutive symbols of string $b$ are semantic similar, i.e. $sim(b_j, b_{j-1})$ is large, inserting the latter one $b_j$ would not cost much, and the insertion operation would have little influence on the semantic edit distance between two strings. Thus, the weight of the insertion can be defined as equation~\ref{eqn:ins}.
-  \item For substitution operation, we substitute the last symbol $a_i$ of string $a$ with the last symbol $b_j$ of string $b$, thus, the weight of the substitution is the dissimilarity of $a_i$ and $b_j$, defined as equation~\ref{eqn:sub}.
+  \item For the deletion, we delete the last symbol $a_i$ from sequence $\boldsymbol{a}$, if two consecutive symbols of string $a$ are semantically similar, deleting the latter one would not cost much since both $a_i$ and $a_{i-1}$ represent similar concept in the tweets. \autoref{eqn:del} takes into account this intuition in the cost of deletion.
+  \item Similarly for the insertion operation, we insert the last symbol $b_j$ into sequence $\boldsymbol{b}$, if two consecutive symbols of string $b$ are semantically similar inserting the latter one $b_j$ would not cost much, and the insertion operation would have little influence on the semantic edit distance between two strings. Thus, the weight of the insertion can be defined as \autoref{eqn:ins}.
+  \item For substitution operation, if the symbol $a_i$ of sequence $\boldsymbol{a}$ are semantically similar to the symbol $b_j$ of sequence $\boldsymbol{b}$, the substitution would not cost much. Since $\simt$ represents the similarity between two symbols, the weight of the substitution can be defined as \autoref{eqn:sub}.
 \end{itemize}
+Additionally, all of the cost functions range between zero and one.
+
+Note that the semantic similarity is a measure of a set of symbols, where the distance between symbols is based on the similarity of the corresponding meaning and semantic context, instead of similarity with respect to the syntactical representation (e.g. the format and sequence of strings). The term semantic similarity is often confused with the term semantic relatedness, which is actually different. Semantic similarity is more specific than semantic relatedness and often refer to synonymous, but the latter also includes concepts such as antonymy. For example, ``love'' and ``like'' are semantic similar, ``love'' and ``hate'' are semantic related, but ``love'' and ``hate'' are not semantic similar, as they have opposite meanings.
 
 % \todo[inline]{There is a lot of information packed into the above paragraph. Consider expanding your explanation of each step a bit more. This is particularly important, as your discussion in the next sections builds directly from it (i.e. computing weight operations, etc).}
 
 % \todo[inline]{DK: Explain why we have defined these weight functions. For example, the reason why we have such deletion cost is because we assume that if two consecutive words are similar then deleting the latter one would not cost that much.}
 
+% \subsection{Semantic Similarity}
+% \label{sec:ss}
 
-\section{Semantic Similarity}
-\label{sec:ss}
+% As we have discussed in section~\ref{sec:sed}, the semantic edit distance requires the semantic similarity matrix to compute the weight of operations. In this study, each token is regarded as a symbol of the string; the semantic similarity of symbols is calculated by the co-occurrence matrix of all tokens. 
 
-As we have discussed in section~\ref{sec:sed}, the semantic edit distance requires the semantic similarity matrix to compute the weight of operations. In this study, each token is regarded as a symbol of the string; the semantic similarity of symbols is calculated by the co-occurrence matrix of all tokens. 
+% Given $n$ symbols, $s_1,s_2,...,s_n$, the co-occurrence matrix of them is shown as follows,
 
-Given $n$ symbols, $s_1,s_2,...,s_n$, the co-occurrence matrix of them is shown as follows,
+% \begin{equation*}
+% \begin{bmatrix}
+%     x_{11} & x_{12} & \dots  & x_{1n} \\
+%     x_{21} & x_{22} & \dots  & x_{2n} \\
+%     \vdots & \vdots & \ddots & \vdots \\
+%     x_{n1} & x_{n2} & \dots  & x_{nn}
+% \end{bmatrix}
+% \end{equation*}
 
-\begin{equation*}
-\begin{bmatrix}
-    x_{11} & x_{12} & \dots  & x_{1n} \\
-    x_{21} & x_{22} & \dots  & x_{2n} \\
-    \vdots & \vdots & \ddots & \vdots \\
-    x_{n1} & x_{n2} & \dots  & x_{nn}
-\end{bmatrix}
-\end{equation*}
+% where $x_{ij}$ denotes the co-occurrence number of $s_i$ and $s_j$. (for all $1 \leq i \leq n$, $1 \leq j \leq n$). The co-occurrence matrix is symmetrical, i.e. $x_{ij} = x_{ji}$, where $i \neq j$. Besides, $x_{kk} = 0$, for all $1 \leq k \leq n$. 
 
-where $x_{ij}$ denotes the co-occurrence number of $s_i$ and $s_j$. (for all $1 \leq i \leq n$, $1 \leq j \leq n$). The co-occurrence matrix is symmetrical, i.e. $x_{ij} = x_{ji}$, where $i \neq j$. Besides, $x_{kk} = 0$, for all $1 \leq k \leq n$. 
+% We aim to normalize the co-occurrence matrix to the semantic similarity matrix, with the shape of the matrix unchanged and the element of the matrix scaling between 0 and 1. A larger value indicates that symbols are more similar. In this study, two methods are implemented to compute the semantic similarity of symbols, based on the co-occurrence matrix, which are logarithmic normalization and cosine similarity.
 
-We aim to normalize the co-occurrence matrix to the semantic similarity matrix, with the shape of the matrix unchanged and the element of the matrix scaling between 0 and 1. A larger value indicates that symbols are more similar. In this study, two methods are implemented to compute the semantic similarity of symbols, based on the co-occurrence matrix, which are logarithmic normalization and cosine similarity.
+% \subsection{Dynamic Programming for SED}
+% \label{sec:implementandcomplexity}
 
-\subsection{Logarithmic Normalization}
+% The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $sed(n,m)$, defined by the recurrence.
 
-Because each number in the co-occurrence matrix donates the co-occurrence number of two symbols, the large number indicates two symbols have high co-occurrence frequency, thus, two symbols would have higher similarity. 
+% According to the dynamic programming, we construct a matrix with two dimensions equaling to the lengths of a given pair of strings. In other words, we construct a matrix to record the edit distances between all symbols of the first string and all symbols of the second string, then we can compute the values by `flood filling' the matrix, from top to bottom and left to right, and the semantic edit distance between the two strings is the last value computed, which is the right bottom element.
 
-% \todo[inline]{Explain what is the rational behind the logarithmic nomalisation. Word frequency follows power-law distribution (Zipf's law)~\citep{zipf2013psycho}, therefore if we normalise co-occurrence matrix by the maximum co-occurrence, then the most of the entries are close to zero. We can mitigate the importance of frequently co-occurred word pair via log-normalisation.}
+% The time complexity of the dynamic programming is $O(mn)$. The space complexity is also $O(mn)$, if the whole dynamic programming matrix is constructed. 
 
-Word frequency roughly follows a power-law distribution (Zipf's law)~\citep{zipf2013psycho}, therefore, if we normalise co-occurrence matrix by the maximum co-occurrence, the most of the entries are close to zero. We can mitigate the importance of frequently co-occurred word pair via log-normalisation.
+% The algorithm is somewhat redundant
+% \begin{algorithm}[t!]
 
-Logarithmic normalization normalizes all data in the co-occurrence matrix directly, as follows, to transfer $x_{ij}$ to $x_{ij}^{''}$.
+% \SetAlgoLined
+% \SetKwInOut{Input}{input}
+% \Input{two strings $a$ and $b$, semantic similarity matrix $S$}
+%  $n = \text{len}(a)$\;
+%  $m = \text{len}(b)$\;
+%  $\sed[i,j] = 0$\;
+%  \For{$i \gets 0$ \KwTo $n$}{
+%     $\sed[i,0] = \sed[i-1,0]+(1-S[a_i,a_{i-1}])$\;
+%  }
+%  \For{$j \gets 0$ \KwTo $m$}{
+%     $\sed[0,j] = \sed[0,j-1]+(1-S[b_j,b_{j-1}])$\;
+%  }
+%  \For{$ i \gets 1 $ \KwTo $n$}{
+%   \For{$j\gets1$ \KwTo $m$}{
+%     \If{$a_i == b_j$}{
+%      $\sed[i,j] = \sed[i-1,j-1]$\;
+%      } \Else {
+%      $\sed[i,j] = \\ \min(\sed[i-1,j]+(1-S[a_i,a_{i-1}])$, \\
+%      $\quad\sed[i,j-1]+(1-S[b_j,b_{j-1}]),$ \\ 
+%      $\quad\sed[i-1,j-1]+(1- S[a_i,b_j]))$\;
+%     }
+%   }
+%  }
+%  \Return $\sed[n,m]$
+%  \vspace{1em}
+%  \caption{Semantic Edit Distance}
+% \end{algorithm}
 
-\begin{equation} \label{eqn:log1}
-  x_{ij}^{'} = \log (x_{ij} + 1)
-\end{equation}
-\begin{equation} \label{eqn:log2}
-  x_{ij}^{''} = \frac{x_{ij}^{'}}{\max\limits_{1 \leq i \leq n, 1 \leq j \leq n} x_{ij}^{'}}
-\end{equation}
-% \todo{Explain equations if possible. For example, you may say we add 1 to numerical stability since $\log(0)$ is negative infinity.}
 
-We use equation \ref{eqn:log1} to compute the logarithm of $x_{ij}+1$ instead of $x_{ij}$, because the co-occurrence number $x_{ij}$ can be 0, which indicate that two symbols have never co-occurred together, but $\log(0)$ is negative infinity, which is meaningless. Thus, we add 1 for each co-occurrence $x_{ij}$ to improve the numerical stability. If $x_{ij}=0$, then $\log(x_{ij}+1)=0$, which is rational.
+% \subsection{Logarithmic Normalization}
 
-For equation \ref{eqn:log2}, we divide the logarithmic result $x_{ij}^{'}$ by the maximum value among all $x_{ij}^{'}$ we computed using equation \ref{eqn:log1}, to normalize the results between 0 and 1.
+% Because each number in the co-occurrence matrix donates the co-occurrence number of two symbols, the large number indicates two symbols have high co-occurrence frequency, thus, two symbols would have higher similarity. 
 
-Thus, the similarity between $s_i$ and $s_j$ is $sim(s_i, s_j)=x_{ij}^{''}$, and $0 \leq sim(s_i, s_j) \leq 1$.
+% % \todo[inline]{Explain what is the rational behind the logarithmic nomalisation. Word frequency follows power-law distribution (Zipf's law)~\citep{zipf2013psycho}, therefore if we normalise co-occurrence matrix by the maximum co-occurrence, then the most of the entries are close to zero. We can mitigate the importance of frequently co-occurred word pair via log-normalisation.}
 
-\subsection{Cosine Similarity}
-% \todo[inline]{It might be helpful here to briefly mention or remind the reader why you are performing cosine similarity - i.e. what it aims to achieve in your analysis.}
-Similar to logarithmic normalization, cosine similarity is another approach to compute the semantic similarity matrix based on the co-occurrence matrix in this research.
+% Word frequency roughly follows a power-law distribution (Zipf's law)~\citep{zipf2013psycho}, therefore, if we normalise co-occurrence matrix by the maximum co-occurrence, the most of the entries are close to zero. We can mitigate the importance of frequently co-occurred word pair via log-normalisation.
 
-Cosine similarity is a measure of similarity between two non-zero vectors of a multidimensional space, since the vectors are directional, the similarity between two vectors is the cosine of the angle between them, determining whether they are pointing in a similar direction. 
+% Logarithmic normalization normalizes all data in the co-occurrence matrix directly, as follows, to transfer $x_{ij}$ to $x_{ij}^{''}$.
 
-Given two vectors $\bf{x}$ and $\bf{y}$, the cosine similarity is represented as follows,
+% \begin{equation} \label{eqn:log1}
+%   x_{ij}^{'} = \log (x_{ij} + 1)
+% \end{equation}
+% \begin{equation} \label{eqn:log2}
+%   x_{ij}^{''} = \frac{x_{ij}^{'}}{\max\limits_{1 \leq i \leq n, 1 \leq j \leq n} x_{ij}^{'}}
+% \end{equation}
+% % \todo{Explain equations if possible. For example, you may say we add 1 to numerical stability since $\log(0)$ is negative infinity.}
 
-\begin{equation}  \label{eqn:cosine}
-  \simt(\bf{x},\bf{y}) = \cos(\bf{x},\bf{y}) = \frac{\bf{x}^\top \bf{y}}{\|{\bf{x}}\| \|{\bf{y}}\|}
-\end{equation}
+% We use equation \ref{eqn:log1} to compute the logarithm of $x_{ij}+1$ instead of $x_{ij}$, because the co-occurrence number $x_{ij}$ can be 0, which indicate that two symbols have never co-occurred together, but $\log(0)$ is negative infinity, which is meaningless. Thus, we add 1 for each co-occurrence $x_{ij}$ to improve the numerical stability. If $x_{ij}=0$, then $\log(x_{ij}+1)=0$, which is rational.
 
-In order to apply cosine similarity to compute the semantic similarity, for the co-occurrence matrix, each row (or column) of it can be regarded as a vector of the corresponding symbol $s_i$ (i.e. $s_i=[x_{i1}x_{i2}...x_{in}]$), as the vector contains the co-occurrence numbers between this symbol and all other symbols, thus the cosine similarity of the co-occurrence matrix can be computed according to the equation~\ref{eqn:cosine}. The results of cosine similarity are also in the range of 0 to 1.
+% For equation \ref{eqn:log2}, we divide the logarithmic result $x_{ij}^{'}$ by the maximum value among all $x_{ij}^{'}$ we computed using equation \ref{eqn:log1}, to normalize the results between 0 and 1.
 
-\section{Result Normalization}
+% Thus, the similarity between $s_i$ and $s_j$ is $\simt(s_i, s_j)=x_{ij}^{''}$, and $0 \leq \simt(s_i, s_j) \leq 1$.
+
+% \subsection{Cosine Similarity}
+% % \todo[inline]{It might be helpful here to briefly mention or remind the reader why you are performing cosine similarity - i.e. what it aims to achieve in your analysis.}
+% Similar to logarithmic normalization, cosine similarity is another approach to compute the semantic similarity matrix based on the co-occurrence matrix in this research.
+
+% Cosine similarity is a measure of similarity between two non-zero vectors of a multidimensional space, since the vectors are directional, the similarity between two vectors is the cosine of the angle between them, determining whether they are pointing in a similar direction. 
+
+% Given two vectors $\bf{x}$ and $\bf{y}$, the cosine similarity is represented as follows,
+
+% \begin{equation}  \label{eqn:cosine}
+%   \simt(\bf{x},\bf{y}) = \cos(\bf{x},\bf{y}) = \frac{\bf{x}^\top \bf{y}}{\|{\bf{x}}\| \|{\bf{y}}\|}
+% \end{equation}
+
+% In order to apply cosine similarity to compute the semantic similarity, for the co-occurrence matrix, each row (or column) of it can be regarded as a vector of the corresponding symbol $s_i$ (i.e. $s_i=[x_{i1}x_{i2}...x_{in}]$), as the vector contains the co-occurrence numbers between this symbol and all other symbols, thus the cosine similarity of the co-occurrence matrix can be computed according to the equation~\ref{eqn:cosine}. The results of cosine similarity are also in the range of 0 to 1.
+
+\subsection{Normalised SED}
 \label{sec:resultnorm}
 
-Both edit distances and semantic edit distances between every pair of tweets are computed, and the distances are related to the number of tokens of two tweets. For example, if two strings have nothing in common, the edit distance between these two string equals to the number of symbols of the string with the most symbols among the two strings. i.e., 
+Both edit distances and semantic edit distances ranges between zero and infinity in theory, but the actual distances are bounded by the length of the sequences in practice. Both distances will not be greater than the maximum length of sequences, therefore, if the two sequences are short, the distances will be small even they are totally different sequences. 
+Thus, to eliminate the impact of the length of tweets on distance, we propose and test two different normalisation methods.
 
-\[ \text{For string } a=a_1...a_n, b=b_1...b_m, \text{ for any } 1 \leq i \leq n, 1 \leq j \leq m \text{ and } a_i \neq b_j, ed(a,b) = max(m,n) \]
-
-Thus, we aim to eliminate the impact of the length of tweets on distance, and we can normalize the the result by using the semantic edit distance divided by the edit distance. i.e. 
-
+First, we use the ratio between the semantic edit distance and edit distance as follows 
 \begin{equation}
-  \text{For tweets } t_1 \text{ and } t_2, \quad \text{norm}(t_1, t_2)=\frac{\sed(t_1, t_2)}{\ed(t_1, t_2)}
+  \text{SED/ED}(\boldsymbol{a}, \boldsymbol{b})=\frac{\sed(\boldsymbol{a}, \boldsymbol{b})}{\ed(\boldsymbol{a}, \boldsymbol{b})}.
 \end{equation}
+Note that the semantic edit distance is always less than the edit distance with our definition of cost function, therefore the ratio also ranges between zero and one. If the ratio is close to zero, then it indicates that there are differences between the textual representations of both sequences, however, they are semantically very similar.
 
-Therefore, we can eventually obtain a distance matrix of the tweets, with each element of the matrix representing the normalized distance between the corresponding two tweets.
+Second, we use the maximum length of the sequences to normalise the semantic edit distance as follows
+\begin{equation}
+  \text{SED/Max}(\boldsymbol{a}, \boldsymbol{b})=\frac{\sed(\boldsymbol{a}, \boldsymbol{b})}{\max(|\boldsymbol{a}|, |\boldsymbol{b}|)}.
+\end{equation}
+In the worse case, the semantic edit distance will be the same as the maximum length of sequences, thus this normalisation also ranges between zero and one. Intuitively, this metric measures an average cost of operation on a single symbol in a sequence.
+
+% Therefore, we can eventually obtain a distance matrix of the tweets, with each element of the matrix representing the normalised distance between the corresponding two tweets.
 
 % \todo[inline]{There appear to be some issues with the left margin on some pages. Please check.}
-\section{Evaluation Measures}
-\label{sec:evaluation}
 
-After the result normalization, we can obtain a normalized distance matrix, and implement the evaluation on the result.
-
-\subsection{Descriptive Statistics}
-
-The descriptive statistics of the normalized distance matrix can be used as a measure of the performance of the model. 
-
-From the definition of semantic edit distance, we know $sed(t_1, t_2) \leq {ed(t_1, t_2)}$, thus, $0 < norm(t_1, t_2) \leq 1$. When there is no semantic relationship between tweet $t_1$ and $t_2$, $sed(t_1, t_2) = {ed(t_1, t_2)}$ and $norm(t_1, t_2) = 1$. the smaller $sed(t_1, t_2)$ indicates the smaller $norm(t_1, t_2)$, which indicates tweet $t_1$ and $t_2$ are more semantic similar.
-
-For the Russian Troll tweets, each implementation we compare two categories. Therefore, the normalized results can be divided into three groups: the distances between tweets which both are the first category, the distances between tweets which both are the second category and the distances between tweets which are different categories. The normalized distances between tweets which are the same category would be small, while the normalized distance between tweets which are different categories would be large. Thus, the descriptive statistics (such as mean and median) of normalized distances can be regarded as an evaluation measure to assess the performance of semantic edit distance on Russian Troll dataset.
-% \text{You can specify exactly which descriptive statistics you will use.}
-
-\subsection{Cluster Analysis and Visualization}
-
-The objective of cluster analysis is to group a set of objects into several clusters, with objects in the same cluster are similar to each other and dissimilar to objects in other clusters. Clustering can be implemented based on the similarity or distance between vectors or matrix \citep{wilks2011cluster}. 
-
-In this research, we use visualization techniques to visualize the clustering result and evaluate the performance of the algorithm. The normalized distance matrix can be used to visualize and cluster the trolls. Ideally, the clustering is supposed to group different types of trolls into different clusters. Furthermore, we can analyze some features or patterns of the different categories of trolls from the clustering visualization, as well as the similarity distribution of each category of trolls. We use the Scikit-learn library to implement multi-dimensional scaling (MDS) and t-distributed Stochastic Neighbor Embedding (TSNE) to visualize the data points in a 2-dimensional plane, with each point representing the corresponding tweet.
-% \todo{Have you explained somewhere about how a cluster analysis can help to evaluate your results? What do we want to find out from the clusters? What's the intuition behind this?}
-
-\subsubsection{MDS}
-% \todo[inline]{Need reference}
-Multidimensional scaling (MDS) is the method to geometrically represent $n$ objects using $n$ points, and the distances between points correspond to the dissimilarities between objects \citep{kruskal1964multidimensional}. MDS can represent the distance of tweets in a low-dimensional with respect to the distances in the original high-dimensional space. MDS aims to model similarity or dissimilarity of objects as distances in a low-dimensional geometric space. Thus, MDS can usefully visualize the distance relationship between Russian Troll types by the computed distance matrix.
-
-\subsubsection{TSNE}
-% \todo[inline]{Need reference as well}
-TSNE is proposed by ~\cite{maaten2008visualizing}, which can also visualize high-dimensional data. TSNE converts similarities between objects to joint probabilities. TSNE is a variation of Stochastic Neighbor Embedding \citep{hinton2003stochastic} which is much easier to optimize. It can reduce the tendency to bring points together in the center of the map to obtain better visualizations. According to ~\cite{maaten2008visualizing}, the t-SNE can produce much better visualizations than the other techniques (such as Isomap and Locally Linear Embedding) on almost all of the high-dimensional data sets. 
-% \todo{Which datasets?}
-
-\section{Implementation and Complexity}
-\label{sec:implementandcomplexity}
-
-\subsection{Dynamic Programming for Semantic Edit Distance}
-
-The semantic edit distance between $a = a_1...a_n$ and $b = b_1...b_m$ is given by $sed(n,m)$, defined by the recurrence.
-
-According to the dynamic programming, we construct a matrix with two dimensions equaling to the lengths of a given pair of strings. In other words, we construct a matrix to record the edit distances between all symbols of the first string and all symbols of the second string, then we can compute the values by `flood filling' the matrix, from top to bottom and left to right, and the semantic edit distance between the two strings is the last value computed, which is the right bottom element.
-% \todo[inline]{DK: It would be good to have a pseudo code of the dynamic programming (including loop, input, output). Although it would be somewhat similar to what you described above, it will give readers an idea on what is the input, output, and intermediate variables. You may move this section after 4.5 to include the pseudo code for semantic similarity as well (i.e. 4.6 Implementation and Complexity). Refer to https://www.overleaf.com/learn/latex/algorithms}
-
-\begin{algorithm}[thbp]
-\SetAlgoLined
-% \KwResult{Write here the result }
-\SetKwInOut{Input}{input}
-\Input{two strings $a$ and $b$, semantic similarity matrix $S$}
- $n = \text{len}(a)$\;
- $m = \text{len}(b)$\;
- $\sed[i,j] = 0$\;
- \For{$i \gets 0$ \KwTo $n$}{
-    $\sed[i,0] = \sed[i-1,0]+(1-S[a_i,a_{i-1}])$\;
- }
- \For{$j \gets 0$ \KwTo $m$}{
-    $\sed[0,j] = \sed[0,j-1]+(1-S[b_j,b_{j-1}])$\;
- }
- \For{$ i \gets 1 $ \KwTo $n$}{
-  \For{$j\gets1$ \KwTo $m$}{
-    \If{$a_i == b_j$}{
-     $\sed[i,j] = \sed[i-1,j-1]$\;
-     } \Else {
-     $\sed[i,j] = \min(\sed[i-1,j]+(1-S[a_i,a_{i-1}]), \sed[i,j-1]+(1-S[b_j,b_{j-1}]), \sed[i-1,j-1]+(1- S[a_i,b_j]))$\;
-    }
-  }
- }
- \Return $\sed[n,m]$
- \caption{Semantic Edit Distance}
-\end{algorithm}
-
-
-\subsection{Complexity}
-
-The time complexity of the dynamic programming is $ O(mn) $. The space complexity is also $ O(mn) $, if the whole dynamic programming matrix is constructed. 

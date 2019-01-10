@@ -1,6 +1,148 @@
 %!TEX root = main.tex
+% \section{Data Preprocessing}
+% \label{sec:dp}
 
-\section{Results and findings}
+% The goal of performing textual preprocessing is to convert the tweet text to a list of tokens that would be useful and effective for further text mining and analysis. The main preprocessing steps include tokenization, stopwords removal and normalization. 
+
+% \subsection{Tokenization}
+
+% Tokenization is a process which splits long strings of text into words, n-grams, numbers, and/or punctuation. Further processing would be performed after the text has been appropriately tokenized.
+
+% A customized NLTK tokenizer based on a regex pattern is defined, which preserves hashtags (string start with \#), mentions (string start with @), abbreviations (e.g. U.S.A.), words with hyphens or apostrophe (e.g. co-occurrence, it's), etc, when breaking documents into a list of tokens.
+% % \todo[inline]{These regular expressions can also be provided in the appendix if you like.}
+
+% \subsection{Stopwords Removal}
+% \label{ssec:stopwords}
+
+% Since we attempt to distinguish the category of Russian Trolls by using the content of tweets, the tokens which are unique and typical to particular categories would be significant and worthwhile. However, there are also some noisy tokens that are common English words (known as \textit{stopwords}, such as `the' and `and') which have a high frequency in both categories but are less significant than words that appear less commonly but are more closely associated to each particular category. Thus, it is often useful to remove the stopwords. Two methods to remove stopwords are illustrated as follows. 
+
+% \subsubsection{Regular Stopwords Removal}
+% % \todo[inline]{DK: Tokenization should come first, because it is impossible to remove stopwords(noise) without tokenization, i.e. tokenization $\rightarrow$ stopwords removal.}
+
+% As we are handling tweets text data, which is not quite the same as normal English text, the tweets text would include some URLs, Emojis, Smileys (e.g. ``:-)'') and Reserved words (e.g. ``RT'', ``via''), which would be removed in this study as we attempt to focus on the text itself. However, URLs, punctuation and Emojis might be useful information that we can exploit, and we might try to use that kind of information in the future work. Besides, the English stopwords (e.g. ``it'', ``and'', ``because'') and punctuations should be removed. Although the use of English stopwords and punctuations in the text is crucial and frequent, they do not convey any document specific information. Similarly, numbers are also not useful for further processing, which should be removed. 
+
+% % \textit{Actually, URLS, punctuation and emojis might be useful information that we can exploit, but in this study we remove it to focus on the text itself. Future work might try to use that kind of information.}
+% % \textit{I would consider moving this sentence to the previous paragraph where you introduce stopwords.} 
+% We use the NLTK standard English stopwords list and standard punctuations list to remove English stopwords and punctuations from the list of tokens. 
+
+% \subsubsection{Top-N TF Removal}
+
+% For the top-n TF removal, in addition to the regular stopwords removal, we also remove the top-n TF tokens. 
+
+% TF, short for term frequency, indicates the number occurrences of term $t$ in document $d$. 
+
+% One simplest way to remove the noise tokens is to remove the top-n frequency tokens, because high frequency often indicates that the importance of the token is small, and it is more likely to be frequent in both categories' tweets. \cite{saif2014stopwords} validate that remove top-frequency words helps improve the effectiveness of tweets processing according to the Zipf's law. 
+
+% \subsection{Normalization}
+
+% Normalization refers to a series of tasks, which includes converting all text to the lower case, expanding contractions, stemming, and lemmatization. 
+
+% Since tweets are posted on the Internet, it would be slightly different from the formal written language and spoken language, there would be many ``text language'', which are abbreviations and slangs that commonly used with Internet-based communication. For example, ``AFAIK'' means ``As Far As I Know'', ``b4'' means ``before'', and ``LOL'' means ``Laughing Out Loud'', etc. Besides, there would be many contractions, such as ``you're'' for ``you are'', ``yall'' for ``you all''. Thus, we use the Contractions library to expand contractions. 
+% % \todo{This sentence is slightly unclear - consider rephrasing.}
+
+% Both stemming and lemmatization are designed to simplify the various forms of a word to a common basic form. Stemming is the process of reducing affixes from a word to obtain their word stem, base or root form (e.g. running to run). Lemmatization is related to stemming, but it only attempts to remove inflectional endings and return the word's lemma (e.g. better to good). In this study, we use Snowball Stemmer and WordNet Lemmatizer from NLTK library.
+% % \todo[inline]{Which lemmatiser or stemmer did you use for the experiment?}
+
+
+\section{Experiments}
 \label{sec:results-findings}
+In this section, we demonstrate the classification performance of time-sensitive KNN on the Russian troll dataset. We further visualise the results using t-SNE to understand trolling strategies.
 
-To do.
+\subsection{Experimental Settings}
+
+\begin{table}[t!]
+\centering
+\begin{tabular}{c|r|r|r}
+     & Train & Validation & Test \\ \hline\hline
+    LeftTroll & 99 & 53 & 79 \\ \hline
+    RightTroll & 188 & 106 & 155 \\ \hline
+    NewsTroll & 20 & 11 & 22
+\end{tabular}
+\caption{Number of accounts for each category used for training, validation, and testing.}
+\label{tab:dataset}
+\end{table}
+
+We use the subset of Russian troll dataset consisting of three labels, Right and Left Trolls and News Feed, as described in \autoref{sec:troll-dataset}. The subset contains tweets written by 733 accounts, and we split the accounts into 50\% train, 20\% validation, and 30\% test datasets. The detail statistics of each dataset is described in \autoref{tab:dataset}. On average, 2,370 tweets are written by each account. For each account, we randomly sample 50 tweets to make a task more challenging.
+We further tokenise the tweets using a tweet tokenisation toolkit written in python\footnote{Available at https://github.com/s/preprocessor} and remove infrequent words occurred less than 3 times in the corpus.
+
+The co-occurrence matrix used to compute the semantic similarity is constructed from the entire dataset. Note that although we have constructed this matrix from the troll dataset, it can also be constructed from a general corpus to capture the common similarity patterns between different words.
+
+We test five distant metrics, cosine similarity, ED, SED/max, SED/ED, SED under KNN framework without temporal information, and two distance metrics, cosine similarity (TCosine) and SED (TSED) under time-sensitive KNN framework, where we incorporate the inverse exponential decay in \autoref{eqn:tsknn}. The performance are measured by macro and micro F1. Note that the dataset is highly skewed toward the RightTroll accounts. In general, the macro F1 is widely used as a classification performance under a such skewed distribution.
+
+\subsection{Result}
+\autoref{fig:valid_perf} shows the classification performances of different metrics on the validation dataset with varying number of neighbourhood size in KNN. Note that TSED has additional parameter $\theta$, which controls the exponential decaying rate. We perform a grid search on $\theta$ to find the best configuration and report the best validation performance in \autoref{fig:valid_perf}. One interesting pattern from the validation set is that all other metrics except time sensitive metrics, TCosine and TSED, suffers from having a large number of neighbours, whereas the time sensitive metrics retain stable performances across the different number of neighbours. 
+We conjecture that including more neighbours include more tweets from different time ranges, as done with the non time-sensitive metrics, eventually hurts the classification of individual tweets.
+
+Based on the best parameter configuration obtained from the validation set, \autoref{tab:test_perf} shows the final performance of each metric on the test dataset. The TSED outperforms all other metrics for both macro and micro F1 scores. Note that TSED uses more number of neighbours to compare with the other metrics, while all the other metrics except SED/ED use only one-nearest neighbour for the classification. The two normalised metrics, SED/max and SED/ED, do not help increase the performance. We conjecture that due to the limited number of characters can be written at a time\footnote{Twitter has 140 characters limitation before Nov. 2017}, the normalisation is not necessary in such case.
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/knn_valid_perf_lrn_3_50.pdf}
+    \caption{Macro and micro F1 scores on validation set. Cosine, ED, and SED performs the best when k is 1.}
+    \label{fig:valid_perf}
+\end{figure}
+
+
+\begin{table}[t!]
+    \centering
+    \begin{tabular}{l|r|r||r|r}
+    & \multicolumn{2}{c||}{Micro F1} &  \multicolumn{2}{c}{Macro F1} \\ \hline
+    Distance & Best K & F1 & Best K & F1\\ \hline
+    Cosine	&1	&0.75 &1	&0.54\\
+    ED	&1	&0.72&1	&0.46\\
+    SED	&1	&0.78&1	&0.62\\
+    SED/Max	&1	&0.65&1	&0.35\\
+    SED/ED	&8	&0.62&8	&0.29\\
+    TCosine	&3	&0.81&1	&0.61\\
+    TSED & 5 & \textbf{0.84} & 7 & \textbf{0.75}
+    \end{tabular}
+    \caption{Micro and macro F1 scores on test set. Although SED outperforms the others methods that are not accounting temporal differences, both TCosine and TSED significantly outperforms their non time-sensitive counterparts, which tells us the importance of incorporating the temporal dimension to classify an identity of users.}
+    \label{tab:test_perf}
+\end{table}
+
+\subsection{Visualisation}
+
+\begin{figure*}[t!]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{figures/sed-sep-2016.pdf}
+    \caption{[SED] September, 2016}
+    \label{fig:sed-sep2016}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{figures/sed-apr-2017.pdf}
+    \caption{[SED] April, 2017}
+    \end{subfigure}
+
+    \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{figures/tsed-sep-2016.pdf}
+    \caption{[TSED] September, 2016}
+    \label{fig:tsed-sep2016}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{figures/tsed-apr-2017.pdf}
+    \caption{[TSED] April, 2017}
+    \label{fig:tsed-apr2017}
+    \end{subfigure}
+    \caption{Tweets from two different time ranges are embedded in two dimensional space via t-SNE with two variants of edit distances. The locations are computed using the distances between tweets from all of the two ranges, and then we plot tweets separately based on when the tweets are written. With SED, there have relatively clear distinction between different categories before the election, whereas the difference is relatively indistinguishable after the election. With TSED, The separation between 2016 and 2017 is relatively clearer than SED since the distance between tweets increases exponentially based on their time differences.}
+    \label{fig:embedding}
+\end{figure*}
+
+%\todo[inline]{Changed the markers in the visualisation from circles to square, diamond, and circle. hope this would help for the people like Tim!}
+
+We visualise the tweets via t-SNE based on their pairwise distances. t-SNE is originally purpose to visualise high-dimensional data~\cite{maaten2008visualizing}. \autoref{fig:embedding} shows the visualisation between tweets from two different time ranges using SED and TSED. We choose two time ranges: the first range is chosen just before the presidential election, and the second range is chosen half-year later than the election. The location of tweets are computed via t-SNE, and then we visualise tweets based when they are written. 
+
+The visualisation suggests that the trolls are not acting mutually exclusive to each other from different category. Sometimes, both RightTroll and LeftTroll tweets similar things together. Therefore, there is no clear distinction between three different categories. Nevertheless, many tweets are a locally clustered based on their categories, which eventually helps us to classify their political ideology. 
+
+Another notable pattern from the visualisation from both metrics is that the tweets authored by the left trolls are spread across all regions whereas those of the right trolls are more focused and relatively clustered well. This visualisation shows that the public perception of different trolling strategies w.r.t political ideology, the right trolls are focused on supporting Trump whereas the left trolls attempt to divide the Democratic Party against itself, can be observable through the semantic distances.
+
+From the visualisation of two different time ranges, we can also notice that the tweets between different categories are located more closely after the election; the clustering structure before the election is relatively clearer than the structure after the election.
+
+Finally, we zoom into a few interesting regions to check the actual tweets from those regions. Most of the tweets from the notable left most RightTroll cluster from \autoref{fig:sed-sep2016} and \autoref{fig:tsed-sep2016} contains hashtag \#ThingsMoreTrustedThanHillary, which shows the strategic behaviour of right trolls to make the Democratic candidate distrustful. From region x in \autoref{fig:tsed-apr2017} where we can observe tweets from both ideologies, we can find conversations related to a personal religious belief such as
+\begin{itemize}
+    \item Just wait \& \#God will make things great (LeftTroll)
+    \item Each of us is a Masterpiece of God’s Creation. Respect Life! \#Prolife (RightTroll),
+    %((d), 20.1 -15.9)
+\end{itemize}
+suggesting us that the trolls also pretend to be ordinary people.
+We also find that the right most mixed cluster in both \autoref{fig:tsed-sep2016} and \autoref{fig:tsed-apr2017} contains very short tweets (1 or 2 word tokens) whose pairwise distances are close to zero.

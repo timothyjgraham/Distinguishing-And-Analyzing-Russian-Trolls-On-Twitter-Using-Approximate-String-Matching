@@ -28,6 +28,7 @@
 \usepackage[svgnames]{xcolor}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
 %\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Incompatible with AAAI
 %\usepackage[authoryear,round,longnamesfirst]{natbib} % Incompatible with AAAI
 \usepackage{url}
@@ -48,12 +49,13 @@
 \usepackage{enumitem}
 
 % Image related packages
-\usepackage{verbatim}
-\usepackage[export]{adjustbox}
-\usepackage{subfig}
-\usepackage{epstopdf}
-\DeclareGraphicsExtensions{.png,.pdf,.eps,.jpg,.tif,.tiff,.ps} %MAR: moving PNG first
-\graphicspath{{img//}{img/yifei-work//}{img/wordclouds//}}
+\usepackage{subcaption}
+%\usepackage{verbatim}
+%\usepackage[export]{adjustbox}
+%\usepackage{epstopdf}
+%\DeclareGraphicsExtensions{.png,.pdf,.eps,.jpg,.tif,.tiff,.ps} %MAR: moving PNG first
+%\graphicspath{{img//}{img/yifei-work//}{img/wordclouds//}}
+
 
 %RJA added for \citet{} loved by social scientists the world over...
 %\usepackage{natbib}
@@ -63,9 +65,6 @@
 \newcommand{\citep}{\cite}
 \newcommand{\citealp}[1]{\citeauthor{#1}~\citeyear{#1}}
 
-\newcommand{\ed}{\text{ed}}
-\newcommand{\sed}{\text{sed}}
-\newcommand{\simt}{\text{sim}}
 
 % Theorems and corrolaries
 %\newtheorem{theorem}{Theorem}[section]
@@ -161,6 +160,21 @@
 \newcommand{\Bot}{\texttt{Bot}\xspace}
 \newcommand{\Suspended}{\texttt{Suspended}\xspace}
 
+
+\newcommand{\ed}{\text{ed}}
+\newcommand{\sed}{\text{sed}}
+\newcommand{\dist}{\text{dist}}
+\newcommand{\simt}{\text{sim}}
+
+\newcommand{\del}{\text{del}}
+\newcommand{\ins}{\text{ins}}
+\newcommand{\sub}{\text{sub}}
+
+% \newcommand{\pushright}[1]{\ifmeasuring@#1\else\omit\hfill$\displaystyle#1$\fi\ignorespaces}
+% \newcommand{\pushleft}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\hfill\fi\ignorespaces}
+\newcommand{\specialcell}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\ignorespaces\fi}
+
+
 \begin{document}
  %% just a tag, to let know the etoc package not to show these sections.
 \etocdepthtag.toc{mtchapter}
@@ -214,6 +228,6 @@
 \bibliographystyle{aaai}
 }
 
-\input{appendix}
+% \input{appendix}
 
 \end{document}

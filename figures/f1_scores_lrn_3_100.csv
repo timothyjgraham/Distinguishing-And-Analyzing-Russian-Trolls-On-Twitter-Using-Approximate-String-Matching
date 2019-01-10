@@ -1,0 +1,13 @@
+metric,distance,best k,f1 score
+micro f1,cosine,1,0.84
+micro f1,ed,1,0.78
+micro f1,sed,1,0.87
+micro f1,sed_max,3,0.79
+micro f1,sed_ed,9,0.73
+micro f1,TSED,3,0.89,-0.000105
+macro f1,cosine,1,0.72
+macro f1,ed,1,0.65
+macro f1,sed,1,0.84
+macro f1,sed_max,3,0.57
+macro f1,sed_ed,3,0.48
+micro f1,TSED,3,0.86,-0.000105
