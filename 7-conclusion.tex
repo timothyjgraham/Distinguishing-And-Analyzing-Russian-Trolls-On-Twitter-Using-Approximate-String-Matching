@@ -1,5 +1,51 @@
 %!TEX root = main.tex
 
 \section{Discussion}
+\begin{center}
+    \textit{The troll is always smaller than its parts.} % do anyone like this?
+\end{center}
 
-To do.
+We return to the social theory discussed in Section \ref{sec:tardeANT} which underpins the framework set out in this paper. 
+As we have shown, the visualisation and analysis presented in Section~\ref{sec:visualisation} affords a nuanced analysis of the \textit{gradation} and heterogeneity of Russian troll identities, which are not as disjoint or homogeneous as previous work suggested. 
+However, this is not to say that prevailing analytic categories of Russian trolls are insufficient or invalid -- on the contrary, what we offer here builds upon and extends existing scholarship by contributing new empirical insights, methods, and theory.
+
+The visualisation suggests a complex intermingling of discursive troll strategies that make up, and do the work of, the over-arching agenda of the IRA. 
+Together, the Russian troll tweets form an actor-network that has been variously described as `state-sponsored agenda building', `Russian interference', `election hacking', and `political astro-turfing', among others. 
+The titular claim of \citet{latour2012whole} that `the whole is always smaller than its parts' finds compelling empirical validation in our analysis. 
+Thus one might ask, what is Russian interference on Twitter? Answer: \textit{this} network of Russian troll roles (right, left, news feed, etc). 
+Who/what are these Russian troll roles? \textit{This} network of tweets.
+Who/what is this particular Russian troll tweet? \textit{This} cluster of semantically and temporally similar tweets. 
+
+Hence, each time that we wish to pinpoint the identity of a Russian troll, we must look to its parts (in this case tweets, but also location, meta-data, etc); 
+each time we want to pinpoint the meaning or identity of a tweet, we again looks to the parts (words, hashtags, author, etc) and to other tweets that have similar temporal-semantic elements. 
+The traditional notion of micro versus macro, or individual component versus aggregate structure, can be largely bypassed. 
+What matters are the similarities that pass between actors (in this case tweets by Russian trolls) from one time point to another \textit{on the same level}. 
+We can form an understanding of the social phenomenon through navigating and exploring the 2D plane in which the elements (in this case tweets) are arranged and visualised. 
+% In short, we offer a novel approach to navigating Twitter data in a \emph{monadological} way. 
+Specifically we have examined this through quantifying the identities of Russian trolls by following and mapping similarities and differences in their trace data over time.
+
+
+\section{Conclusion}
+
+In this study, we address a new challenging problem: how to characterise online trolls and understand their tactics based on their roles. We focus on the different types of trolls identified in recent studies to picture a more detailed landscape of how Russian trolls attempted to manipulate public opinion and set the agenda during the 2016 U.S. Presidential Election. 
+In order to do so, we propose a novel operationalisation of recently revisited Tarde's ancient social theory, %that has recently been adopted within Actor-Network Theory
+which posits that individuals are defined by the traces of their actions over time. %(rather than pre-defined attributes or characteristics).
+We define a novel text distance metric, called \textit{time-sensitive semantic edit distance}, and we show the effectiveness of the new metric through the classification of Russian trolls according to ground-truth labels (left-leaning, right-leaning, and news feed trolls). 
+The metric is then used to construct a novel visualisation for qualitative analysis of troll roles and strategies. We discover intriguing patterns in the similarities of traces that Russian trolls left behind via their tweets, providing unprecedented insights into Russian troll activity during and after the election. 
+%The visualisation of tweets from two distant time ranges suggests that the agenda-setting strategies of Russian trolls changed markedly before and after the election, though why this occurred remains an unsolved question.
+% The visualisation of tweets from two distant time ranges suggest that the trolls were not working mutually exclusive with respect to their identity, or rather, they worked cooperatively to advance the end-goals of the IRA. 
+%The visualisation further reveals the different behaviours of trolls over time suggesting why and how they changed their tactics for what, which we leave as future work here.
+
+\textbf{Assumptions, limitations and future work.}
+This work makes a number of simplifying assumptions, some of which can be addressed in future work. 
+First, we assume that each tweet is assigned exactly one label, selected from the same set as the user labels. % (i.e. left-, right-leaning or news aggregators).
+Future work will relax this assumption, allowing tweets to have multiple labels, possibly from a set disjoint from the user labels.
+Second, we measure the similarity between the traces of two users by measuring the similarity between tweets and performing a majority vote.
+Future work will introduce trace similarity metrics directly working on a trace level instead of using an aggregated approach.
+Third, we had to characterise the social theory in order to operationalise it as a formal method. In future work we will attend more closely to the nuances of Tarde's monadology and its development within ANT.
+% Finally, one could experiments with n-gram based distances.
+Finally, we aim to construct and publish an interactive version of the visualisation in \autoref{fig:embedding}.
+
+% assumption: label per tweet
+% limit & future work: n-gram distance, trace similarity, publish visualisation tool
+%

@@ -1,0 +1,72 @@
+%!TEX root = main.tex
+
+\section{Introduction}
+%% MAR: first paragraph sets the scene of why would people care
+% \todo[inline]{DW: Shift focus from detecting bots vs human to detecting different types of bots to understand their strategy? activities?}
+Over the past decade, social media platforms such as Twitter and Reddit have exploded in popularity, offering a public forum for 
+% . These platforms are public spaces where 
+millions of people to interact with each other. %and form opinions. 
+However, a novel problem also emerged: the increasing prevalence and influence of \textit{trolls} and \textit{social bots} in social media. 
+Online trolls are predominantly human or hybrid (semi-automated) user accounts who behave in a deceptive, destructive, and/or disruptive manner in a social setting on the Internet \citep{BUCKELS201497}.
+Social bots are largely automated systems that pose as humans, and which seek to influence human communication and manipulate public opinion at scale. 
+Bots have recently caused controversy during the 2016 U.S. presidential election, when it was found that they were not only highly prevalent but also highly influential and ideologically driven \citep{FM7090,rizoiu2018debatenight,Kollanyi.2016.presidentialdebate}. 
+The troll and bot account sets are not necessarily mutually exclusive, and recent studies uncovered that the Russian interference during the 2016 U.S. Election involved a combination of both types of accounts \citep{ferrara-et-al-trolls-ideology} to weaponise social media, to spread state-sponsored propaganda and to destabilise foreign politics \citep{broniatowski-et-al,ICWSM1613006}. 
+%Similarly, political troll groups have recently been identified to play an important role in mobilising public support for Donald Trump's 2016 US Presidential campaign \citep{ICWSM1613006}.
+% For instance, \cite{rizoiu2018debatenight} found that social bots during the 2016 1st US Presidential Debate were more active, had higher political engagement, and were on average 2.5 times more influential than the average human.
+
+%% MAR: second paragraph makes the tasks more precise, in the form of two challenges: 1) detect troll roles/types using a social theory-grounded methods and 2) building a visualisation tool to analyse the behaviour and the strategy of trolls over time.
+There are several challenges that arise when studying the actions of malicious actors such as trolls and bots.
+The first challenge concerns distinguishing between their different types (or roles) in order to understand their strategy.
+Current state-of-the-art approaches usually build large amounts of features, and they use supervised machine learning methods to detect whether a Twitter account exhibits similarity to the known characteristics of social bots~\citep{davis2016botornot}, and use text mining and supervised classification methods to identify online trolls~\citep{mihaylov2015finding}.
+However, such approaches have several drawbacks, including requiring access to (often private) user features, and periodic retraining of models to maintain up-to-date information~\citep{mihaylov2015finding}.
+%decaying accuracy over time (as bot designs change and trolls modify their discursive strategies) \citep{mihaylov2015finding}.
+The question is \textbf{can we circumvent this arms race of distinguishing the roles of online trolls? can we develop social theory-grounded approaches which do not over-rely on machine learning algorithms?}
+% to estimate the likelihood of a Twitter user being a bot or troll, this has several limitations, including requiring vast amount of feature sets, which are often impossible to obtain in practice, and a decaying accuracy over time (as bot design changes and trolls modify their discursive strategies)~\citep{mihaylov2015finding}.
+% Several attempts have been made to accurately and reliably detect trolls and bots in social media. In particular, current state-of-the-art approaches use supervised machine learning to estimate the likelihood of a Twitter user being a bot \citep{davis2016botornot} or a troll on web forums \citep{mihaylov2015finding}.
+% Current state-of-the-art approaches use supervised machine learning to estimate the likelihood of a Twitter user being a bot or troll, this has several limitations, including requiring vast amount of feature sets, which are often impossible to obtain in practice, and a decaying accuracy over time (as bot design changes and trolls modify their discursive strategies)~\citep{mihaylov2015finding}.
+The second challenge lies in analysing and understanding the strategy of trolls.
+While prior work has focused on troll detection, recent studies show the existence of sub-types of trolls simulating multiple political ideologies~\citep{boatwrighttroll,ferrara-et-al-trolls-ideology,2018who-let-the-trolls-out,stewart2018examining}.
+This suggests a sophisticated and coordinated interplay between the different types of troll behaviour to manipulate public opinion effectively.
+The question is therefore \textbf{how to understand the behaviour and the strategy of trolls over time, and analyse the interplay between different troll sub-roles?}
+%Instead, the intuition is that it may be possible to distinguish user types or identities (e.g., bot versus human, or `left troll' versus `right troll') based solely on differences and similarities in the sequential trace of text they generate over time.
+
+This paper addresses the above challenges using a publicly available dataset of Russian troll activity on Twitter, published by \citet{boatwrighttroll}, consisting of nearly 3 million tweets from 2,848 Twitter handles associated with the Internet Research Agency -- a Russian ``troll factory'' -- between February 2012 and May 2018.
+
+To address the first challenge, we build upon recent developments in social theory, which combine Actor-Network Theory (ANT) with the 19$^{th}$ century work of Gabriel Tarde~\citep{latour2012whole,latour2002gabriel,tarde2011monadology}.
+In a nutshell, \citet{latour2012whole} argue that actors in a network (human and non-human) are defined by the digital traces they leave behind, and that we can replace the idea of social role and identity in terms of individual attributes (e.g., ideology, gender, age, location, etc) with a definition of entities based on their traces. 
+On Twitter, a trace of an individual is the sequence of their authored tweets. 
+We tackle the problem of distinguishing the roles and identities of Russian trolls on Twitter by operationalizing ANT and Tarde's theory of monadology~\citep{tarde2011monadology}: we measure the similarities between the sequence of texts they generate over time against a reference set.
+To measure the similarity between two texts, we propose the \emph{time-sensitive semantic edit distance} (t-SED), a novel variant of edit distance adapted to natural language by embedding two factors: \emph{word similarity} and \emph{time sensitivity}.
+Word similarity modulates the cost of the edit operations (i.e. deletion, insertion and substitution) according to the similarity of the words involved in the operation.
+The time sensitivity is highest when the two tweets are concomitant (i.e. they were authored within a short time interval of each other), and addresses issues such as changing discussion topics and concept drift.
+We show that for the task of distinguishing troll roles based on ground truth labels (e.g., left versus right trolls), our method outperforms a logistic regression baseline learner by more than $36\%$ (macro F1). 
+
+% an approximate string matching method using
+% Thus, our goal aims to distinguish types of accounts based on their tweets. Unlike a general supervised classification problem, where pairs of an input and label are provided as an example, our classification algorithm needs to predict a label from a set of ordered text snippets.
+% In this paper, we tackle the problem of identifying and distinguishing the roles and strategies of Russian trolls on Twitter. 
+% Specifically, 
+% The proposed method are based solely on differences and similarities in the sequential trace of text they generate over time and does not require extensive amount of information often required for the detection algorithms.
+
+% Conceptually, the idea for this approach extends from recent developments in social theory, which combine Actor-Network Theory and the 19th century work of Gabriel Tarde \citep{latour2012whole,latour2002gabriel}. In doing so, this paper contributes several important theoretical and empirical results.
+
+% On the other hand, approximate string matching, that is, edit distance, is a good method to quantify the similarity of two strings. Since we attempt to distinguish social bots and trolls based on text features, we assume that both bots or trolls posting may have some special features, for example, using specific hashtags with a specific sequence. Thus, the distances between social bots are small, the distances between humans are small, but the distances between social bots and humans will be larger. However, it is insufficient to distinguish bots or trolls using only edit distance. For example, bots or trolls may post in a similar way but using different words. Thus, based on edit distance, we also attempt to take semantics into account. For example, if there are three sentences, ``I love music'', ``I hate music'' and ``I like music''. All of these three sentences are similar with respect to the string form, but we know that ``love'' and ``like'' are more similar as they have similar semantics, while ``hate'' has the opposite meaning. In this research, we attempt to reflect the semantic similarity as well as the form similarity of strings at the same time.
+
+% According to the overarching goals, there are several research problems in this study. First, to develop the semantic edit distance, we need to address how two text snippets are semantically close to each other to take into account not just textual representations but the underlying semantic meanings. While attempting to incorporate semantic of text, the semantic evolve rapidly with the emergence of new memes and slang. Therefore, we also need to address how the temporal difference between two strings affects the textual closeness. Finally, we investigate the feasibility of such an approach and quantitatively describe the error rate of distinguishing different types of Russian trolls using such an approach, based on ground truth roles of the accounts (right versus left ideology, or news feed trolls).
+
+% This study is motivated both by a combination of computer science problems (developing new methods and results in the area of approximate string matching via edit distance), and social science problems (analysing and detecting bots and trolls on social media, using approximate string matching methods), as well as fundamental problems in social theory relating to identity and social order.
+
+% \TODO{MAR}{Therefore we observe a close connection between \textit{semantics} (what trolls talk about), \textit{temporality} (when they are active and how hashtags are deployed over time), and the particular \textit{roles} and strategies that drive their behaviour (e.g. right versus left troll). }
+
+We address the second challenge by constructing a two-dimensional visualisation, in which we embed the traces of Twitter trolls and their similarities (measured using t-SED) by using t-SNE~\cite{maaten2008visualizing}.
+In addition to observing that the tweets emitted by trolls with similar roles cluster together -- which was expected from the theory of monadology -- we make several new and important findings:
+(1) despite trolls having different and distinguishable roles, they worked together: the right trolls impersonate a homogeneous conservative identity, while the left trolls surround the conversation from all sides, with messages that simultaneously divide the Democrat voters on key issues and complement the destabilisation strategies of the right trolls;
+(2) we observe clusters of complex and orchestrated interplay between left and right trolls, both attempting to co-opt and strategically utilise ethnic identities and racial politics (e.g. \textit{Black Lives Matter}), as well as religious beliefs;
+(3) the news feed trolls (i.e. impersonating news aggregators) are observed to have multiple agendas and sub-roles, such as clusters that disproportionately tweet about news of violence and civil unrest to create an atmosphere of fear, and other clusters that exhibit politically-biased reporting of federal politics;
+(4) there is an obvious shift of strategy between before and after the elections, with less distinguishable roles and strategies of trolls after the elections.
+
+\textbf{The main contributions of this work include:}
+\begin{itemize}
+	\item We introduce a \textbf{sociologically-grounded classification framework to identify the role of trolls} through operationalising the theory of monadology based on the accumulation of social traces rather than user features;
+	\item We develop a \textbf{time-sensitive semantic edit distance} to measure similarity between two elements that form part of traces (i.e. tweets), embedding two components of online natural language: word similarity and item concomitance;
+	\item We propose \textbf{a visualisation based on the novel distance metric} to gain insight on the strategic behaviour of trolls before and after the 2016 U.S. presidential election.
+\end{itemize}
